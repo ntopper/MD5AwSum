@@ -1,4 +1,4 @@
-MDAWSUM
+MD5AWSUM
 ==================
 
 MD5 checksum with hash table lookup of commonlly downloaded files (IE distro ISO's)
