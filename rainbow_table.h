@@ -16,8 +16,8 @@ public:
 
     void parse() throw(int);
     void search(string &hash);
-    void add(string &file_path, string &key);
-    void remove(string &file_path, string &key);
+    void add(string &file_path, string &key) throw(int);
+    void remove(string &key);
     void write();
 
     //errors

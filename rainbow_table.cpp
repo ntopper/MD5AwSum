@@ -5,8 +5,7 @@ using namespace std;
 
 RainbowTable::RainbowTable() {
     //initalize file_path using config class
-    string f = "tests/tst.xml";
-    this->file_path = f;
+
 }
 
 const int RainbowTable::ERROR_READING_FILE = 0;
@@ -70,4 +69,51 @@ void RainbowTable::print_entry(pugi::xml_node &entry) {
             cout << '\t' << attr.name() << ": " << attr.value() << endl;
         }
     }
+}
+
+void RainbowTable::remove(string &key) {
+    //remove all entrys with 'key' of key
+
+    pugi::xml_node root = this->tree.child("RainbowTable");
+
+    //search through child nodes
+    for (pugi::xml_node entry = root.first_child();
+            entry;
+            entry = entry.next_sibling()) {
+
+        const char * node_key = entry.attribute("key").value();
+
+        if (strcmp(key.c_str() , node_key ) == 0) {
+            //key matches, remove node from parent
+            root.remove_child(entry);
+        }
+    }
+}
+
+void RainbowTable::add(string &file_path, string &key) throw(int) {
+    //adds all "entry" elements if the document at file_path to the master xml tree
+
+    //try to load in the new document
+    pugi::xml_document new_doc;
+    if (!new_doc.load_file(file_path.c_str())) {
+        throw(ERROR_READING_FILE);
+        return;
+    }
+    pugi::xml_node new_root = new_doc.child("RainbowTable");
+    pugi::xml_node old_root = this->tree.child("RainbowTable");
+
+    //for each new entry
+    for (pugi::xml_node entry = new_root.child("entry");
+            entry;
+            entry = entry.next_sibling("entry")) {
+        //add key attribute
+        entry.append_attribute("key") = key.c_str();
+
+        //append to master tree
+        old_root.append_copy(entry);
+    }
+}
+
+void RainbowTable::write() {
+    this->tree.save_file(this->file_path.c_str());
 }
