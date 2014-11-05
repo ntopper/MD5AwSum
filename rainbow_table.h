@@ -19,6 +19,7 @@ public:
     void add(string &file_path, string &key) throw(int);
     void remove(string &key);
     void write();
+    void add_url(string &url, string &key) throw(int);
 
     //errors
     const static int ERROR_READING_FILE;

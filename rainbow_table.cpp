@@ -117,3 +117,31 @@ void RainbowTable::add(string &file_path, string &key) throw(int) {
 void RainbowTable::write() {
     this->tree.save_file(this->file_path.c_str());
 }
+
+void RainbowTable::add_url(string &url, string &key) throw(int) {
+	//uses wget to download a temp file from 'url'
+	//attemps to parse the downloaded file, and add entries
+	//to the master hash table
+	
+	string temp_file = "/tmp/.md5repo.xml";
+	//wget command to download file at URL to ~/.md5awsum.temp
+	string wget_command = "wget -O " + temp_file + " " + url;
+
+	//command to remove temp file
+	string rm = "rm " + temp_file;
+	
+	//make system call to download temp file
+	system(wget_command.c_str());
+	
+	//attempt to parse and add to repo
+	try {
+		this->add(temp_file, key);	
+	}
+	catch(int e) {
+		throw(e);
+	}
+	this->write();
+	//remove the temp file and return
+	system(rm.c_str());
+	return;
+}
