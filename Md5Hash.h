@@ -8,7 +8,6 @@ class Md5Hash {
 		string file_path;
 		string checksum;
 
-		void Digest() throw(int);
 		void handleString(string) throw(int);
 		void cleanupString() throw(int);
 	public:
