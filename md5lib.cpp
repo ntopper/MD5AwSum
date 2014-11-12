@@ -3,8 +3,10 @@
 #include <string>
 #include <stdio.h>
 #include <math.h>
+#include <cmath>
 
 #define HASHERROR 1
+#define HASHSIZE 33
 
 using namespace std;
 
@@ -20,12 +22,27 @@ string md5lib::hash(string file_path) throw(int) {
 
 	return inp;
 
-	//this function will have the calls to the various parts
-	//of the md5 algorithm
+	//this function will set up the constructor and return the result
+	//makes it so we only need one static call to hash to hash a file
+	//there will be a lot going on in the background.
+
+	//return md5lib(file_path).get();
+}
+
+md5lib::md5lib(string path) {
+	this->file_path = path;
+	this->result = "\0";
+
+	//need to read from path and pass on for processing
+
+	this->initialize();
+}
+
+string md5lib::get() {
+	return this->result;
 }
 
 void md5lib::initialize() {
-	this->s = {7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21};
 	for(int i = 0; i < 64; i++) {
 		this->K[i] = floor(abs(sin(i+1)) * pow(2,32));
 	}
@@ -41,8 +58,48 @@ void md5lib::preprocess() {
 	//padding
 }
 
+int md5lib::leftrotate(int x, int c) {
+	return (x << c) | (x >> (32-c));
+}
+
 void md5lib::digest() {
 	//main processing of input
+	for(int i = 0; i < length(input); i+=512) {
+		int M[16]; //break input into 32 bit chunks (16 of them)
+
+		//initialize variables for this chunk
+		int A = this->a0, B = this->b0, C = this->c0, D = this->d0;
+		int F, g;
+
+		//perform bitwise operations
+		for(int j = 0; j < 64; j++) {
+			if(j <= 15) {
+				F = (B&C)|((~B)&D);
+				g = i;
+			} else if(j > 15 && j <= 31) {
+				F = (D&B)|((~D)&C);
+				g = (5*i + 1) % 16;
+			} else if(j > 31 && j <= 47) {
+				F = B^C^D;
+				g = (3*i + 5) % 16;
+			} else if(j > 47) {
+				F = C^(B|(~D));
+				g = (7*i) % 16;
+			}
+
+			int dTemp = D;
+			D = C;
+			C = B;
+			B = B + leftrotate((A + F + this->K[j] + M[g]), s[j]);
+			A = dTemp;
+		}
+
+		//finish up this chunk
+		this->a0 = this->a0 + A;
+		this->b0 = this->b0 + B;
+		this->c0 = this->c0 + C;
+		this->d0 = this->d0 + D;
+	}
 }
 
 void md5lib::finalize() {
