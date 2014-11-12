@@ -8,10 +8,10 @@ class Md5Hash {
 		string file_path;
 		string checksum;
 
-	public:
-		Md5Hash(string,bool = false);
 		void Digest() throw(int);
 		void handleString(string) throw(int);
 		void cleanupString() throw(int);
+	public:
+		Md5Hash(string,bool = false);
 		string getChecksum();
 };
