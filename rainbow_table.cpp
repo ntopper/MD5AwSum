@@ -5,11 +5,10 @@ using namespace std;
 
 RainbowTable::RainbowTable() {
     //initalize file_path using config class
-
+	this->file_path = "/etc/md5sum/hashes.xml"
 }
 
 const int RainbowTable::ERROR_READING_FILE = 0;
-
 void RainbowTable::parse() throw(int) {
 
     const char * c = this->file_path.c_str();
@@ -134,12 +133,8 @@ void RainbowTable::add_url(string &url, string &key) throw(int) {
 	system(wget_command.c_str());
 	
 	//attempt to parse and add to repo
-	try {
-		this->add(temp_file, key);	
-	}
-	catch(int e) {
-		throw(e);
-	}
+	this->add(temp_file, key);
+	
 	this->write();
 	//remove the temp file and return
 	system(rm.c_str());
