@@ -82,7 +82,7 @@ void md5lib::process() {
 			memcpy(output, buff, strlen(buff));
 			output[strlen(buff)] = 0x80; //128; ?
 
-			memcpy(output + (new_length - tmplength)/8, &length,4);
+			memcpy(output + (new_length - tmplength)/8, &length,8);
 
 			int chunk = strlen(output)/64;
 			for(int i = 0; i < chunk; i++) {
