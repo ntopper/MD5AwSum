@@ -7,6 +7,7 @@
 
 #define HASHERROR 1
 #define HASHSIZE 33
+#define BUFFSIZE 512
 
 using namespace std;
 
@@ -56,52 +57,61 @@ void md5lib::initialize() {
 void md5lib::preprocess() {
 	//preprocessing of input
 	//padding
+
+	ifstream inpreader(file_path, ios::binary);
+	char buff[BUFFSIZE]; // this should be bits not bytes
+	while(1) { //must signal end
+		inpreader.read(buff, sizeof(buff) / sizeof(*buff));
+		this->digest(buff);
+	}
+	//must add padding when the buffer is not filled
+	inpreader.close();
 }
 
 int md5lib::leftrotate(int x, int c) {
 	return (x << c) | (x >> (32-c));
 }
 
-void md5lib::digest() {
-	//main processing of input
-	for(int i = 0; i < length(input); i+=512) {
-		int M[16]; //break input into 32 bit chunks (16 of them)
+void md5lib::digest(string input) {
+	int M[16]; //break input into 32 bit chunks (16 of them)
 
-		//initialize variables for this chunk
-		int A = this->a0, B = this->b0, C = this->c0, D = this->d0;
-		int F, g;
+	//initialize variables for this chunk
+	int A = this->a0, B = this->b0, C = this->c0, D = this->d0;
+	int F, g;
 
-		//perform bitwise operations
-		for(int j = 0; j < 64; j++) {
-			if(j <= 15) {
-				F = (B&C)|((~B)&D);
-				g = i;
-			} else if(j > 15 && j <= 31) {
-				F = (D&B)|((~D)&C);
-				g = (5*i + 1) % 16;
-			} else if(j > 31 && j <= 47) {
-				F = B^C^D;
-				g = (3*i + 5) % 16;
-			} else if(j > 47) {
-				F = C^(B|(~D));
-				g = (7*i) % 16;
-			}
-
-			int dTemp = D;
-			D = C;
-			C = B;
-			B = B + leftrotate((A + F + this->K[j] + M[g]), s[j]);
-			A = dTemp;
+	//perform bitwise operations
+	for(int j = 0; j < 64; j++) {
+		if(j <= 15) {
+			F = (B&C)|((~B)&D);
+			g = j;
+		} else if(j > 15 && j <= 31) {
+			F = (D&B)|((~D)&C);
+			g = (5*j + 1) % 16;
+		} else if(j > 31 && j <= 47) {
+			F = B^C^D;
+			g = (3*j + 5) % 16;
+		} else if(j > 47) {
+			F = C^(B|(~D));
+			g = (7*j) % 16;
 		}
 
-		//finish up this chunk
-		this->a0 = this->a0 + A;
-		this->b0 = this->b0 + B;
-		this->c0 = this->c0 + C;
-		this->d0 = this->d0 + D;
+		int dTemp = D;
+		D = C;
+		C = B;
+		B = B + leftrotate((A + F + this->K[j] + M[g]), s[j]);
+		A = dTemp;
 	}
+
+	//finish up this chunk
+	this->a0 = this->a0 + A;
+	this->b0 = this->b0 + B;
+	this->c0 = this->c0 + C;
+	this->d0 = this->d0 + D;
 }
 
 void md5lib::finalize() {
 	//put it all together
+	char buff[HASHSIZE];
+	sprintf(buff,"%x%x%x%x",this->a0,this->b0,this->c0,this->d0);
+	this->result = string(buff);
 }

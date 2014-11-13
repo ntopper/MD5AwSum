@@ -12,7 +12,7 @@ class md5lib {
 		void initialize();
 		void preprocess();
 		int leftrotate(int,int);
-		void digest();
+		void digest(string);
 		void finalize();
 	public:
 		static string hash(string) throw(int);
