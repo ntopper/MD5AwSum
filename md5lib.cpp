@@ -1,15 +1,23 @@
 #include "md5lib.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <stdio.h>
+#include <stdint.h>
 #include <math.h>
 #include <cmath>
 
 #define HASHERROR 1
 #define HASHSIZE 33
-#define BUFFSIZE 512
+#define MESSAGESIZE 64
+
+//http://stackoverflow.com/questions/7656219/c-c-function-for-generating-a-hash-for-passwords-using-md5-or-another-algorit
+//http://bobobobo.wordpress.com/2010/10/17/md5-c-implementation/
+//needs -std=c++11 to run as of now
 
 using namespace std;
+
+int main() { return 0; }
 
 string md5lib::hash(string file_path) throw(int) {
 	//temporary implementation until hash function is written
@@ -34,9 +42,9 @@ md5lib::md5lib(string path) {
 	this->file_path = path;
 	this->result = "\0";
 
-	//need to read from path and pass on for processing
-
 	this->initialize();
+	this->process();
+	this->finalize();
 }
 
 string md5lib::get() {
@@ -44,7 +52,7 @@ string md5lib::get() {
 }
 
 void md5lib::initialize() {
-	for(int i = 0; i < 64; i++) {
+	for(uint32_t i = 0; i < 64; i++) {
 		this->K[i] = floor(abs(sin(i+1)) * pow(2,32));
 	}
 
@@ -54,33 +62,32 @@ void md5lib::initialize() {
 	this->d0 = 0x10325476;
 }
 
-void md5lib::preprocess() {
-	//preprocessing of input
-	//padding
-
+void md5lib::process() {
 	ifstream inpreader(file_path, ios::binary);
-	char buff[BUFFSIZE]; // this should be bits not bytes
-	while(1) { //must signal end
-		inpreader.read(buff, sizeof(buff) / sizeof(*buff));
+	bool alive = true;
+	char buff[MESSAGESIZE];
+	while(alive) {
+		inpreader.read(buff, MESSAGESIZE);
+		if (inpreader.eof()) {
+			//padding should be implemented here
+			alive = false;
+		}
 		this->digest(buff);
 	}
-	//must add padding when the buffer is not filled
 	inpreader.close();
 }
 
-int md5lib::leftrotate(int x, int c) {
+uint32_t md5lib::leftrotate(uint32_t x, uint32_t c) {
 	return (x << c) | (x >> (32-c));
 }
 
-void md5lib::digest(string input) {
-	int M[16]; //break input into 32 bit chunks (16 of them)
-
+void md5lib::digest(uint32_t *M) {
 	//initialize variables for this chunk
-	int A = this->a0, B = this->b0, C = this->c0, D = this->d0;
-	int F, g;
+	uint32_t A = this->a0, B = this->b0, C = this->c0, D = this->d0;
+	uint32_t F, g;
 
 	//perform bitwise operations
-	for(int j = 0; j < 64; j++) {
+	for(uint32_t j = 0; j < 64; j++) {
 		if(j <= 15) {
 			F = (B&C)|((~B)&D);
 			g = j;
@@ -95,7 +102,7 @@ void md5lib::digest(string input) {
 			g = (7*j) % 16;
 		}
 
-		int dTemp = D;
+		uint32_t dTemp = D;
 		D = C;
 		C = B;
 		B = B + leftrotate((A + F + this->K[j] + M[g]), s[j]);
