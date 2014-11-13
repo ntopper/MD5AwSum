@@ -73,7 +73,6 @@ void md5lib::process() {
 	while(alive) {
 		inpreader.read(buff, MESSAGESIZE);
 		if (inpreader.eof()) {
-			//padding should be implemented here
 			char output[2048];
 			uint32_t tmplength = length;
 
@@ -81,13 +80,18 @@ void md5lib::process() {
 			for(new_length = length+1; new_length%512 != 448; new_length++);
 
 			memcpy(output, buff, strlen(buff));
-			output[strlen(buff)] = 128;
+			output[strlen(buff)] = 0x80; //128; ?
 
 			memcpy(output + (new_length - tmplength)/8, &length,4);
 
-			alive = false;
+			int chunk = strlen(output)/64;
+			for(int i = 0; i < chunk; i++) {
+				char tmp[MESSAGESIZE];
+				memcpy(tmp, output+i*MESSAGESIZE, MESSAGESIZE);
+				this->digest((uint32_t *)tmp);
+			}
 
-			this->digest((uint32_t *)output); //need to check for when size is greater than 512 (or 64)
+			alive = false;
 		} else {
 			this->digest((uint32_t *)buff);
 		}
