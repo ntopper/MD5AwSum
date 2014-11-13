@@ -84,6 +84,8 @@ void md5lib::process() {
 
 			memcpy(output + (new_length - tmplength)/8, &length,8);
 
+			cout << "\n\nDEBUG->" << strlen(output) << endl; //the lengths are not 64 or a multiple of 64 as needed :(
+
 			int chunk = strlen(output)/64;
 			for(int i = 0; i < chunk; i++) {
 				char tmp[MESSAGESIZE];
@@ -94,8 +96,8 @@ void md5lib::process() {
 			alive = false;
 		} else {
 			this->digest((uint32_t *)buff);
+			length += 512;
 		}
-		length += 512;
 	}
 	inpreader.close();
 }
