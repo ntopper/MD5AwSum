@@ -138,6 +138,6 @@ void md5lib::digest(uint32_t *M) {
 void md5lib::finalize() {
 	//put it all together
 	char buff[HASHSIZE];
-	sprintf(buff,"%x%x%x%x",this->a0,this->b0,this->c0,this->d0);
+	sprintf(buff,"%8.8x%8.8x%8.8x%8.8x",this->a0,this->b0,this->c0,this->d0);
 	this->result = string(buff);
 }
