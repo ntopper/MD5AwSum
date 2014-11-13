@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
@@ -16,8 +17,6 @@
 //needs -std=c++11 to run as of now
 
 using namespace std;
-
-int main() { return 0; }
 
 string md5lib::hash(string file_path) throw(int) {
 	//temporary implementation until hash function is written
@@ -43,8 +42,11 @@ md5lib::md5lib(string path) {
 	this->result = "\0";
 
 	this->initialize();
+	cout << "initialized... ";
 	this->process();
+	cout << "processed... ";
 	this->finalize();
+	cout << "finalized." << endl << endl;
 }
 
 string md5lib::get() {
@@ -64,15 +66,32 @@ void md5lib::initialize() {
 
 void md5lib::process() {
 	ifstream inpreader(file_path, ios::binary);
+	uint32_t length = 0;
+	uint32_t new_length;
 	bool alive = true;
 	char buff[MESSAGESIZE];
 	while(alive) {
 		inpreader.read(buff, MESSAGESIZE);
 		if (inpreader.eof()) {
 			//padding should be implemented here
+			char output[2048];
+			uint32_t tmplength = length;
+
+			length += strlen(buff)*8;
+			for(new_length = length+1; new_length%512 != 448; new_length++);
+
+			memcpy(output, buff, strlen(buff));
+			output[strlen(buff)] = 128;
+
+			memcpy(output + (new_length - tmplength)/8, &length,4);
+
 			alive = false;
+
+			this->digest((uint32_t *)output);
+		} else {
+			this->digest((uint32_t *)buff);
 		}
-		this->digest(buff);
+		length += 512;
 	}
 	inpreader.close();
 }
