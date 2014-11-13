@@ -87,7 +87,7 @@ void md5lib::process() {
 
 			alive = false;
 
-			this->digest((uint32_t *)output);
+			this->digest((uint32_t *)output); //need to check for when size is greater than 512 (or 64)
 		} else {
 			this->digest((uint32_t *)buff);
 		}
