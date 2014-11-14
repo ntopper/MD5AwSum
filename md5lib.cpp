@@ -14,6 +14,7 @@
 
 //http://stackoverflow.com/questions/7656219/c-c-function-for-generating-a-hash-for-passwords-using-md5-or-another-algorit
 //http://bobobobo.wordpress.com/2010/10/17/md5-c-implementation/
+//needs -std=c++11 to run as of now
 
 //something is being left over... when the temp file changes it modifies the second hash also
 
@@ -82,7 +83,7 @@ void md5lib::process() {
 			for(new_length = length+1; new_length%512 != 448; new_length++);
 
 			memcpy(output, buff, strlen(buff));
-			output[strlen(buff)] = 0x80; //128; ?
+			output[strlen(buff)] = 0x80;
 
 			memcpy(output + (new_length - tmplength)/8, &length,8);
 
