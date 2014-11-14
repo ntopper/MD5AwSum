@@ -85,7 +85,7 @@ void md5lib::process() {
 
 			length += strlen(buff);
 			for(new_length = (length*8)+1; (new_length%512) != 448; new_length++);
-			new_length = new_length/8;
+			new_length /= 8;
 
 			cout << "length: " << length << endl;
 			cout << "newlength: " << new_length << endl;
@@ -98,19 +98,21 @@ void md5lib::process() {
 			*first = 0x80;
 
 			uint64_t bits = length*8;
-			memcpy(last, &bits, sizeof(bits));
+			/*uint8_t *rev = reinterpret_cast<uint8_t*>(&bits);
+			for (int i=0, j=7; j>=0; ++i, --j) {
+				*(last - i) = *(rev + j);
+			}*/
+			memcpy(last+8, &bits, sizeof(bits));
 
 			//debug
-			hexdump(output,(uint64_t)256);
-
-			cout << "\n[DEBUG] length of output: " << strlen((char *)output) << endl << endl; //the lengths are not 64 or a multiple of 64 as needed :(
+			//hexdump(output,256);
 
 			int chunk = (new_length+64)/64;
 			for(int i = 0; i < chunk; i++) {
 				uint8_t tmp[MESSAGESIZE];
 				memset(tmp,0,MESSAGESIZE);
 				memcpy(tmp, output+i*MESSAGESIZE, MESSAGESIZE);
-				hexdump(tmp,(uint64_t)MESSAGESIZE);
+				hexdump(tmp,MESSAGESIZE);
 				this->digest((uint32_t *)tmp);
 			}
 
@@ -165,8 +167,20 @@ void md5lib::digest(uint32_t *M) {
 void md5lib::finalize() {
 	//put it all together
 	char buff[HASHSIZE];
-	sprintf(buff,"%8.8x%8.8x%8.8x%8.8x",this->a0,this->b0,this->c0,this->d0);
-	this->result = string(buff);
+	uint8_t *temp;
+
+	temp = (uint8_t *)&(this->a0);
+	sprintf(buff,"%2.2x%2.2x%2.2x%2.2x", temp[0], temp[1], temp[2], temp[3]);
+	this->result += string(buff);
+	temp = (uint8_t *)&(this->b0);
+	sprintf(buff,"%2.2x%2.2x%2.2x%2.2x", temp[0], temp[1], temp[2], temp[3]);
+	this->result += string(buff);
+	temp = (uint8_t *)&(this->c0);
+	sprintf(buff,"%2.2x%2.2x%2.2x%2.2x", temp[0], temp[1], temp[2], temp[3]);
+	this->result += string(buff);
+	temp = (uint8_t *)&(this->d0);
+	sprintf(buff,"%2.2x%2.2x%2.2x%2.2x", temp[0], temp[1], temp[2], temp[3]);
+	this->result += string(buff);
 }
 
 void hexdump(uint8_t* buff, uint64_t size) {
