@@ -19,8 +19,7 @@
 using namespace std;
 
 //debug purposes
-void hexdump(char*);
-void hexdump(unsigned char*);
+void hexdump(uint8_t*,uint64_t);
 
 string md5lib::hash(string file_path) throw(int) {
 	//temporary implementation until hash function is written
@@ -79,8 +78,8 @@ void md5lib::process() {
 	while(alive) {
 		inpreader.read(buff, MESSAGESIZE);
 		if (inpreader.eof()) {
-			char output[256]; //changing this value changes the amount of values in output
-			memset(output, 0, 256);
+			uint8_t output[256]; //changing this value changes the amount of values in output
+			memset(output, 0, 255);
 			uint64_t new_length;
 			uint64_t tmplength = length;
 
@@ -93,23 +92,25 @@ void md5lib::process() {
 
 			memcpy(output, buff, strlen(buff));
 
-			char *first = output + length - tmplength;
-			char *last = output + new_length - tmplength - 1;
+			uint8_t *first = output + length - tmplength;
+			uint8_t *last = output + new_length - tmplength - 1;
 			fill(first, last, 0);
 			*first = 0x80;
 
-			//*last = (char)length; //this makes the output change each time :(
-			memcpy(last, &length, sizeof(length));
+			uint64_t bits = length*8;
+			memcpy(last, &bits, sizeof(bits));
 
 			//debug
-			hexdump(output);
+			hexdump(output,(uint64_t)256);
 
-			cout << "\n[DEBUG] length of output: " << strlen(output) << endl << endl; //the lengths are not 64 or a multiple of 64 as needed :(
+			cout << "\n[DEBUG] length of output: " << strlen((char *)output) << endl << endl; //the lengths are not 64 or a multiple of 64 as needed :(
 
 			int chunk = (new_length+64)/64;
-			for(int i = 0; i <= chunk; i++) {
-				char tmp[MESSAGESIZE];
+			for(int i = 0; i < chunk; i++) {
+				uint8_t tmp[MESSAGESIZE];
+				memset(tmp,0,MESSAGESIZE);
 				memcpy(tmp, output+i*MESSAGESIZE, MESSAGESIZE);
+				hexdump(tmp,(uint64_t)MESSAGESIZE);
 				this->digest((uint32_t *)tmp);
 			}
 
@@ -168,18 +169,9 @@ void md5lib::finalize() {
 	this->result = string(buff);
 }
 
-void hexdump(char* buff) {
+void hexdump(uint8_t* buff, uint64_t size) {
 	cout << endl;
-	for(unsigned int i = 0; i < strlen(buff); i++) {
-		printf("0x%2.2x\t", buff[i]);
-		if (!((i+1)%8)) printf("\n");
-	}
-	cout << endl;
-}
-
-void hexdump(unsigned char* buff) {
-	cout << endl;
-	for(unsigned int i = 0; i < strlen((char*)buff); i++) {
+	for(unsigned int i = 0; i < size; i++) {
 		printf("0x%2.2x\t", buff[i]);
 		if (!((i+1)%8)) printf("\n");
 	}
