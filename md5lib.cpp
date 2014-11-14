@@ -93,16 +93,16 @@ void md5lib::process() {
 			memcpy(output, buff, strlen(buff));
 
 			uint8_t *first = output + length - tmplength;
-			uint8_t *last = output + new_length - tmplength - 1;
+			uint8_t *last = output + new_length - tmplength + 7;
 			fill(first, last, 0);
 			*first = 0x80;
 
 			uint64_t bits = length*8;
-			/*uint8_t *rev = reinterpret_cast<uint8_t*>(&bits);
+			uint8_t *rev = reinterpret_cast<uint8_t*>(&bits);
 			for (int i=0, j=7; j>=0; ++i, --j) {
 				*(last - i) = *(rev + j);
-			}*/
-			memcpy(last+8, &bits, sizeof(bits));
+			}
+			//memcpy(last+8, &bits, sizeof(bits));
 
 			//debug
 			//hexdump(output,256);
