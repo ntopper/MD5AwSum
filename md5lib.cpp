@@ -14,7 +14,6 @@
 
 //http://stackoverflow.com/questions/7656219/c-c-function-for-generating-a-hash-for-passwords-using-md5-or-another-algorit
 //http://bobobobo.wordpress.com/2010/10/17/md5-c-implementation/
-//needs -std=c++11 to run as of now
 
 //something is being left over... when the temp file changes it modifies the second hash also
 
