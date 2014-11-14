@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 using namespace std;
+using namespace RT;
 
 RepositoryManager::RepositoryManager() {
 	//create an instance of RainbowTable stored in master property

@@ -8,7 +8,7 @@ using namespace std;
 
 class RepositoryManager {
 	public:
-		RainbowTable master;
+		RainbowTable master = new RainbowTable();
 		RepositoryManager();
 		void add(string url);
 		void remove(string url);
