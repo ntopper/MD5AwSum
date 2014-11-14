@@ -21,9 +21,14 @@ md5lib.o: md5lib.cpp md5lib.h
 	@$(CC) $(CFLAGS) md5lib.cpp -o $(BUILDDIR)md5lib.o
 	@echo 'complete.'
 
-md5libtest.o: md5libtest.cpp md5lib.h
+md5libtest.o: tempfile md5libtest.cpp md5lib.h
 	@printf 'building md5libtest... '
 	@$(CC) $(CFLAGS) md5libtest.cpp -o $(BUILDDIR)md5libtest.o
+	@echo 'complete.'
+
+tempfile:
+	@printf 'building testfile... '
+	@echo 'this is a test file!!!!!' > /tmp/.testfile
 	@echo 'complete.'
 
 clean:
