@@ -78,7 +78,7 @@ void md5lib::process() {
 	while(alive) {
 		inpreader.read(buff, MESSAGESIZE);
 		if (inpreader.eof()) {
-			uint8_t output[256]; //changing this value changes the amount of values in output
+			uint8_t output[256];
 			memset(output, 0, 255);
 			uint64_t new_length;
 			uint64_t tmplength = length;
