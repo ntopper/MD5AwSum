@@ -16,7 +16,13 @@
 //http://bobobobo.wordpress.com/2010/10/17/md5-c-implementation/
 //needs -std=c++11 to run as of now
 
+//something is being left over... when the temp file changes it modifies the second hash also
+
+
 using namespace std;
+
+//debug purposes
+void hexdump(char*);
 
 string md5lib::hash(string file_path) throw(int) {
 	//temporary implementation until hash function is written
@@ -42,11 +48,8 @@ md5lib::md5lib(string path) {
 	this->result = "\0";
 
 	this->initialize();
-	cout << "initialized... ";
 	this->process();
-	cout << "processed... ";
 	this->finalize();
-	cout << "finalized." << endl << endl;
 }
 
 string md5lib::get() {
@@ -83,6 +86,9 @@ void md5lib::process() {
 			output[strlen(buff)] = 0x80; //128; ?
 
 			memcpy(output + (new_length - tmplength)/8, &length,8);
+
+			//debug
+			hexdump(output);
 
 			cout << "\n\nDEBUG->" << strlen(output) << endl; //the lengths are not 64 or a multiple of 64 as needed :(
 
@@ -146,4 +152,13 @@ void md5lib::finalize() {
 	char buff[HASHSIZE];
 	sprintf(buff,"%8.8x%8.8x%8.8x%8.8x",this->a0,this->b0,this->c0,this->d0);
 	this->result = string(buff);
+}
+
+void hexdump(char* buff) {
+	cout << endl;
+	for(unsigned int i = 0; i < strlen(buff); i++) {
+		printf("%8.8x\t", buff[i]);
+		if (!((i+1)%8)) printf("\n");
+	}
+	cout << endl;
 }
