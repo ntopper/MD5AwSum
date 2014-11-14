@@ -16,9 +16,6 @@
 //http://bobobobo.wordpress.com/2010/10/17/md5-c-implementation/
 //needs -std=c++11 to run as of now
 
-//something is being left over... when the temp file changes it modifies the second hash also
-
-
 using namespace std;
 
 //debug purposes
@@ -89,6 +86,7 @@ void md5lib::process() {
 
 			//debug
 			hexdump(output);
+			//watch the end of the hex dump it changes each time...
 
 			cout << "\n\nDEBUG->" << strlen(output) << endl; //the lengths are not 64 or a multiple of 64 as needed :(
 
@@ -157,7 +155,7 @@ void md5lib::finalize() {
 void hexdump(char* buff) {
 	cout << endl;
 	for(unsigned int i = 0; i < strlen(buff); i++) {
-		printf("%8.8x\t", buff[i]);
+		printf("0x%2.2x\t", buff[i]);
 		if (!((i+1)%8)) printf("\n");
 	}
 	cout << endl;
