@@ -78,6 +78,11 @@ void md5lib::process() {
 	while(alive) {
 		inpreader.read(buff, MESSAGESIZE);
 		if (inpreader.eof()) {
+			cout << "dumping buff..." << endl;
+			hexdump(buff);
+			cout << "dumping padd..." << endl;
+			hexdump(padd);
+
 			char output[256]; //changing this value changes the amount of values in output
 			uint32_t tmplength = length;
 
