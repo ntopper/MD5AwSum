@@ -88,7 +88,7 @@ void md5lib::process() {
 			new_length /= 8;
 
 			cout << "length: " << length << endl;
-			cout << "newlength: " << new_length << endl;
+			cout << "new_length: " << new_length << endl;
 
 			memcpy(output, buff, strlen(buff));
 
@@ -107,7 +107,7 @@ void md5lib::process() {
 			//debug
 			//hexdump(output,256);
 
-			int chunk = (new_length+64)/64;
+			int chunk = (new_length-tmplength+64)/64;
 			for(int i = 0; i < chunk; i++) {
 				uint8_t tmp[MESSAGESIZE];
 				memset(tmp,0,MESSAGESIZE);
