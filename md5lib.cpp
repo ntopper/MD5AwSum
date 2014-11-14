@@ -73,41 +73,40 @@ void md5lib::initialize() {
 void md5lib::process() {
 	ifstream inpreader(file_path, ios::binary);
 	uint32_t length = 0;
-	uint32_t new_length;
 	bool alive = true;
 	char buff[MESSAGESIZE];
+	memset(buff, 0, MESSAGESIZE);
 	while(alive) {
 		inpreader.read(buff, MESSAGESIZE);
 		if (inpreader.eof()) {
-			cout << "dumping buff..." << endl;
-			hexdump(buff);
-			cout << "dumping padd..." << endl;
-			hexdump(padd);
-
 			char output[256]; //changing this value changes the amount of values in output
+			uint32_t new_length;
 			uint32_t tmplength = length;
 
 			length += strlen(buff);
 			for(new_length = (length*8)+1; (new_length%512) != 448; new_length++);
+			new_length = new_length/8;
 
 			cout << "length: " << length << endl;
-			cout << "newlength: " << new_length/8 << endl;
+			cout << "newlength: " << new_length << endl;
 
 			memcpy(output, buff, strlen(buff));
 
-			memcpy(output + strlen(output), this->padd, (new_length/8 - length - tmplength));
+			char *first = output + new_length - length - tmplength;
+			char *last = output + new_length - tmplength - 1;
+			fill(first, last, 0);
+			*first = 0x80;
 
-			uint32_t bits = length*8;
-			memcpy(output + (new_length - tmplength), &bits,8);
+			//*last = (char)length; //this makes the output change each time :(
+			memcpy(last, &length, 8);
 
 			//debug
 			hexdump(output);
-			//watch the end of the hex dump it changes each time...
 
-			cout << "\n\nDEBUG->" << strlen(output) << endl; //the lengths are not 64 or a multiple of 64 as needed :(
+			cout << "\n[DEBUG] length of output: " << strlen(output) << endl << endl; //the lengths are not 64 or a multiple of 64 as needed :(
 
 			int chunk = strlen(output)/64;
-			for(int i = 0; i < chunk; i++) {
+			for(int i = 0; i <= chunk; i++) {
 				char tmp[MESSAGESIZE];
 				memcpy(tmp, output+i*MESSAGESIZE, MESSAGESIZE);
 				this->digest((uint32_t *)tmp);
