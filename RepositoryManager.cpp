@@ -1,5 +1,6 @@
 #include "RepositoryManager.h"
 #include "RainbowTable.h"
+#include "Md5Hash.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -21,21 +22,21 @@ void RepositoryManager::add(string url) {
 	adds downloaded table to the RainbowTable 'master'
 	if exception thrown, prints error, deletes file, terminates program, otherwise
 	calls rainbowtable save method*/
-	string url_key = "something"; //hash
+	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
 	this->master.add_url(url, url_key);
 }
 
 void RepositoryManager::remove(string url) {
 	/*find key associated to url, tell RainbowTable to remove everything associated with
 	key, then save */
-	string url_key = "anotherthing";
+	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
 	//master.search(k);
 	this->master.remove(url_key);
 }
 
 void RepositoryManager::update(string url) {
 	//call remove then add
-	string url_key = "somethingelse?";
+	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
 	master.remove(url_key);
 	master.add_url(url, url_key);
 }
