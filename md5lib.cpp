@@ -20,6 +20,7 @@ using namespace std;
 
 //debug purposes
 void hexdump(char*);
+void hexdump(unsigned char*);
 
 string md5lib::hash(string file_path) throw(int) {
 	//temporary implementation until hash function is written
@@ -170,6 +171,15 @@ void md5lib::finalize() {
 void hexdump(char* buff) {
 	cout << endl;
 	for(unsigned int i = 0; i < strlen(buff); i++) {
+		printf("0x%2.2x\t", buff[i]);
+		if (!((i+1)%8)) printf("\n");
+	}
+	cout << endl;
+}
+
+void hexdump(unsigned char* buff) {
+	cout << endl;
+	for(unsigned int i = 0; i < strlen((char*)buff); i++) {
 		printf("0x%2.2x\t", buff[i]);
 		if (!((i+1)%8)) printf("\n");
 	}
