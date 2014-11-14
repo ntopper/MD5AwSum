@@ -54,6 +54,11 @@ string md5lib::get() {
 }
 
 void md5lib::initialize() {
+	this->padd[1] = 0x80;
+	for(int i = 1; i < 64; i++) {
+		this->padd[i] = 0x00;
+	}
+
 	for(uint32_t i = 0; i < 64; i++) {
 		this->K[i] = floor(abs(sin(i+1)) * pow(2,32));
 	}
@@ -73,16 +78,21 @@ void md5lib::process() {
 	while(alive) {
 		inpreader.read(buff, MESSAGESIZE);
 		if (inpreader.eof()) {
-			char output[2048];
+			char output[256]; //changing this value changes the amount of values in output
 			uint32_t tmplength = length;
 
-			length += strlen(buff)*8;
-			for(new_length = length+1; new_length%512 != 448; new_length++);
+			length += strlen(buff);
+			for(new_length = (length*8)+1; (new_length%512) != 448; new_length++);
+
+			cout << "length: " << length << endl;
+			cout << "newlength: " << new_length/8 << endl;
 
 			memcpy(output, buff, strlen(buff));
-			output[strlen(buff)] = 0x80;
 
-			memcpy(output + (new_length - tmplength)/8, &length,4);
+			memcpy(output + strlen(output), this->padd, (new_length/8 - length - tmplength));
+
+			uint32_t bits = length*8;
+			memcpy(output + (new_length - tmplength), &bits,8);
 
 			//debug
 			hexdump(output);
@@ -100,7 +110,7 @@ void md5lib::process() {
 			alive = false;
 		} else {
 			this->digest((uint32_t *)buff);
-			length += 512;
+			length += 64;
 		}
 	}
 	inpreader.close();
