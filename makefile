@@ -29,7 +29,7 @@ md5libtest.o: tempfiles md5libtest.cpp md5lib.h
 tempfiles:
 	@printf 'building testfiles... '
 	@echo 'this is a test file!!!' > /tmp/.testfile
-	@perl -e "print 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'x10000" > /tmp/.testfile
+	@perl -e 'for (my $$i=0; $$i <= 1000000; $$i++) { print "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\n"; }' > /tmp/.testfile
 	@printf '' > /tmp/.emptyfile
 	@echo 'complete.'
 
