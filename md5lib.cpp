@@ -78,7 +78,7 @@ void md5lib::process() {
 	while(alive) {
 		inpreader.read(buff, MESSAGESIZE);
 		if (inpreader.eof()) {
-			uint8_t output[256]; //changing this value changes the amount of values in output
+			uint8_t output[256];
 			memset(output, 0, 255);
 			uint64_t new_length;
 			uint64_t tmplength = length;
@@ -112,7 +112,6 @@ void md5lib::process() {
 				uint8_t tmp[MESSAGESIZE];
 				memset(tmp,0,MESSAGESIZE);
 				memcpy(tmp, output+i*MESSAGESIZE, MESSAGESIZE);
-				hexdump(tmp,MESSAGESIZE);
 				this->digest((uint32_t *)tmp);
 			}
 
@@ -130,6 +129,8 @@ uint32_t md5lib::leftrotate(uint32_t x, uint32_t c) {
 }
 
 void md5lib::digest(uint32_t *M) {
+	hexdump((uint8_t*)M,64);
+
 	//initialize variables for this chunk
 	uint32_t A = this->a0, B = this->b0, C = this->c0, D = this->d0;
 	uint32_t F, g;
