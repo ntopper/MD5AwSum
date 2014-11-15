@@ -28,7 +28,8 @@ md5libtest.o: tempfiles md5libtest.cpp md5lib.h
 
 tempfiles:
 	@printf 'building testfiles... '
-	@echo 'qwerqwerqwerweqrqwerqwerqwerqwerwqerrqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwgwegqwegqwegqwegqwegrgwergwergwergwergwergwehrhewrhwerhwerhwerhwehrwerhwerhwerhwerhwerhwerhwerhthis is a test file!!!!!' > /tmp/.testfile
+	@echo 'this is a test file!!!' > /tmp/.testfile
+	@perl -e "print 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'x10000" > /tmp/.testfile
 	@printf '' > /tmp/.emptyfile
 	@echo 'complete.'
 

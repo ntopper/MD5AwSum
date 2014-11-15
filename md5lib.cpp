@@ -73,9 +73,10 @@ void md5lib::process() {
 	ifstream inpreader(file_path, ios::binary);
 	uint64_t length = 0;
 	bool alive = true;
-	char buff[MESSAGESIZE];
-	memset(buff, 0, MESSAGESIZE);
+	char buff[MESSAGESIZE+1];
+	//memset(buff, 0, MESSAGESIZE+1);
 	while(alive) {
+		memset(buff, 0, MESSAGESIZE+1);
 		inpreader.read(buff, MESSAGESIZE);
 		if (inpreader.eof()) {
 			uint8_t output[256];
@@ -84,16 +85,17 @@ void md5lib::process() {
 			uint64_t tmplength = length;
 
 			length += strlen(buff);
-			for(new_length = (length*8)+1; (new_length%512) != 448; new_length++);
-			new_length /= 8;
+			//for(new_length = (length*8)+1; (new_length%512) != 448; new_length++);
+			for(new_length = length+1; new_length%64 != 56; new_length++);
+			//new_length /= 8;
 
-			cout << "length: " << length << endl;
-			cout << "new_length: " << new_length << endl;
+			//cout << "length: " << length << endl;
+			//cout << "new_length: " << new_length << endl;
 
 			memcpy(output, buff, strlen(buff));
 
 			uint8_t *first = output + length - tmplength;
-			uint8_t *last = output + new_length - tmplength + 7;
+			uint8_t *last = output + new_length - tmplength + 7; //- 1 + 8;
 			fill(first, last, 0);
 			*first = 0x80;
 
@@ -102,7 +104,6 @@ void md5lib::process() {
 			for (int i=0, j=7; j>=0; ++i, --j) {
 				*(last - i) = *(rev + j);
 			}
-			//memcpy(last+8, &bits, sizeof(bits));
 
 			//debug
 			//hexdump(output,256);
@@ -129,7 +130,7 @@ uint32_t md5lib::leftrotate(uint32_t x, uint32_t c) {
 }
 
 void md5lib::digest(uint32_t *M) {
-	hexdump((uint8_t*)M,64);
+	//hexdump((uint8_t*)M,64);
 
 	//initialize variables for this chunk
 	uint32_t A = this->a0, B = this->b0, C = this->c0, D = this->d0;
