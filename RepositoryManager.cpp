@@ -24,6 +24,7 @@ void RepositoryManager::add(string url) {
 	calls rainbowtable save method*/
 	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
 	this->master.add_url(url, url_key);
+	this->master.write();
 }
 
 void RepositoryManager::remove(string url) {
@@ -32,11 +33,12 @@ void RepositoryManager::remove(string url) {
 	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
 	//master.search(k);
 	this->master.remove(url_key);
+	this->master.write();
 }
 
 void RepositoryManager::update(string url) {
 	//call remove then add
 	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
-	master.remove(url_key);
-	master.add_url(url, url_key);
+	this->master.remove(url_key);
+	this->master.add_url(url, url_key);
 }
