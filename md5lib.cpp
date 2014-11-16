@@ -54,11 +54,6 @@ string md5lib::get() {
 }
 
 void md5lib::initialize() {
-	this->padd[1] = 0x80;
-	for(int i = 1; i < 64; i++) {
-		this->padd[i] = 0x00;
-	}
-
 	for(uint32_t i = 0; i < 64; i++) {
 		this->K[i] = floor(abs(sin(i+1)) * pow(2,32));
 	}
