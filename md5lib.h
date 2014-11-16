@@ -15,6 +15,7 @@ class md5lib {
 		uint32_t leftrotate(uint32_t,uint32_t);
 		void digest(uint32_t*);
 		void finalize();
+		void hexdump(uint8_t*,uint64_t);
 	public:
 		static string hash(string) throw(int);
 
