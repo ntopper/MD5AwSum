@@ -5,7 +5,7 @@ TARGET=testmd5
 
 all: $(TARGET)
 
-$(TARGET): build md5lib.o md5libtest.o
+$(TARGET): build md5lib md5libtest
 	@printf 'building executable... '
 	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)md5libtest.o -o $(TARGET)
 	@echo 'complete.'
@@ -16,14 +16,19 @@ build:
 	@mkdir $(BUILDDIR)
 	@echo 'complete.'
 
-md5lib.o: md5lib.cpp md5lib.h
+md5lib: md5lib.cpp md5lib.h
 	@printf	'building md5lib... '
 	@$(CC) $(CFLAGS) md5lib.cpp -o $(BUILDDIR)md5lib.o
 	@echo 'complete.'
 
-md5libtest.o: tempfiles md5libtest.cpp md5lib.h
+md5libtest: tempfiles md5libtest.cpp md5lib.h
 	@printf 'building md5libtest... '
 	@$(CC) $(CFLAGS) md5libtest.cpp -o $(BUILDDIR)md5libtest.o
+	@echo 'complete.'
+
+Md5Hash: Md5Hash.cpp Md5Hash.h
+	@printf 'building Md5Hash... '
+	@$(CC) $(CFLAGS) Md5Hash.cpp -o $(BUILDDIR)Md5Hash.o
 	@echo 'complete.'
 
 tempfiles:

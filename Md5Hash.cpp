@@ -23,7 +23,9 @@ Md5Hash::Md5Hash(string inpstr, bool isstr) {
 	if (isstr) this->handleString(inpstr);
 	else this->file_path = inpstr;
 
-	this->checksum = md5lib::hash(this->file_path);
+	//this->checksum = md5lib::hash(this->file_path);
+	md5lib hasher(this->file_path);
+	this->checksum = hasher.get();
 
 	if (isstr) this->cleanupString();
 }

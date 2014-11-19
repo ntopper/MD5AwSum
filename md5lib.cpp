@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <math.h>
 #include <cmath>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 #define HASHERROR 1
 #define HASHSIZE 33
@@ -39,6 +41,19 @@ md5lib::md5lib(string path) {
 	this->file_path = path;
 	this->result = "\0";
 
+	//determine size of the file
+	streampos start, end;
+	ifstream f(this->file_path, ios::binary);
+	start = f.tellg();
+	f.seekg(0,ios::end);
+	end = f.tellg();
+	this->size = (end-start);
+
+	//determine what breaks should be for progress bar
+	if(!(this->size)) this->sizebreak = 1;
+	else this->sizebreak = this->size/100;
+
+	//begin hash progress
 	this->initialize();
 	this->process();
 	this->finalize();
@@ -49,10 +64,12 @@ string md5lib::get() {
 }
 
 void md5lib::initialize() {
+	//populate K
 	for(uint32_t i = 0; i < 64; i++) {
 		this->K[i] = floor(abs(sin(i+1)) * pow(2,32));
 	}
 
+	//initialization values
 	this->a0 = 0x67452301;
 	this->b0 = 0xefcdab89;
 	this->c0 = 0x98badcfe;
@@ -61,7 +78,7 @@ void md5lib::initialize() {
 
 void md5lib::process() {
 	//initialize variables
-	ifstream inpreader(file_path, ios::binary);
+	ifstream inpreader(this->file_path, ios::binary);
 	uint64_t length = 0;
 	bool alive = true;
 	char buff[MESSAGESIZE+1];
@@ -112,8 +129,10 @@ void md5lib::process() {
 			this->digest((uint32_t *)buff);
 			length += 64;
 		}
+		if(!(length%this->sizebreak))this->progress(length);
 	}
 	inpreader.close();
+	cout << endl;
 }
 
 uint32_t md5lib::leftrotate(uint32_t x, uint32_t c) {
@@ -130,15 +149,19 @@ void md5lib::digest(uint32_t *M) {
 	//perform bitwise operations
 	for(uint32_t j = 0; j < 64; j++) {
 		if(j <= 15) {
+			//round 1
 			F = (B&C)|((~B)&D);
 			g = j;
-		} else if(j > 15 && j <= 31) {
+		} else if(j <= 31) {
+			//round 2
 			F = (D&B)|((~D)&C);
 			g = (5*j + 1) % 16;
-		} else if(j > 31 && j <= 47) {
+		} else if(j <= 47) {
+			//round 3
 			F = B^C^D;
 			g = (3*j + 5) % 16;
-		} else if(j > 47) {
+		} else {
+			//round 4
 			F = C^(B|(~D));
 			g = (7*j) % 16;
 		}
@@ -178,10 +201,31 @@ void md5lib::finalize() {
 }
 
 void md5lib::hexdump(uint8_t* buff, uint64_t size) {
+	//debug function to examine bytes being digested
 	cout << endl;
 	for(unsigned int i = 0; i < size; i++) {
 		printf("0x%2.2x\t", buff[i]);
 		if (!((i+1)%8)) printf("\n");
 	}
 	cout << endl;
+}
+
+void md5lib::progress(uint64_t prog) {
+	//get terminal columns
+	struct winsize w;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	uint8_t c = (3*w.ws_col/4)-2;
+
+	//check progress
+	if(!(this->size)) return;
+	float pos = (float)prog/(float)(this->size);
+
+	//create bar
+	cout << "[";
+	for(int i = 0; i < c; i++) {
+		if(i < pos*c) cout << "=";
+		else cout << " ";
+	}
+	cout << "]" << int(pos*100 + 1) << "%\r";
+	cout.flush();
 }
