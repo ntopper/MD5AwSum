@@ -1,10 +1,32 @@
 #include "RainbowTable.h"
 #include <iostream>
 #include <string>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <fstream>
+#include <sys/stat.h>
 
 RainbowTable::RainbowTable() {
-    //initalize file_path using config class
-	this->file_path = "/etc/md5sum/hashes.xml";
+
+    //get home dir from env variable or from uid
+    const char *homedir;
+    if ((homedir = getenv("HOME")) == NULL) {
+        homedir = getpwuid(getuid())->pw_dir;
+    }
+
+	this->file_path = homedir;
+    this->file_path += "/.md5awsum";
+    mkdir(this->file_path.c_str(), 0777);
+    this->file_path += "/hashes.xml";
+    
+    //create ~/.md5sum/hashes.xml if it does not exist
+    struct stat buffer;   
+    if(!(stat (this->file_path.c_str(), &buffer) == 0))
+    {
+        this->tree.load("<RainbowTable />");
+        this->write();
+    }
 }
 
 const int RainbowTable::ERROR_READING_FILE = 0;
@@ -121,7 +143,7 @@ void RainbowTable::add_url(string &url, string &key) throw(int) {
 	//attemps to parse the downloaded file, and add entries
 	//to the master hash table
 	
-	string temp_file = "/tmp/.md5repo.xml";
+	string temp_file = this->file_path + ".tmp";
 	//wget command to download file at URL to ~/.md5awsum.temp
 	string wget_command = "wget -O " + temp_file + " " + url;
 
@@ -138,4 +160,8 @@ void RainbowTable::add_url(string &url, string &key) throw(int) {
 	//remove the temp file and return
 	system(rm.c_str());
 	return;
+}
+
+string RainbowTable::getPath() {
+	return this->file_path;
 }
