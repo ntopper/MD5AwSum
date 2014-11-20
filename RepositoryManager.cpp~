@@ -22,23 +22,21 @@ void RepositoryManager::add(string url) {
 	adds downloaded table to the RainbowTable 'master'
 	if exception thrown, prints error, deletes file, terminates program, otherwise
 	calls rainbowtable save method*/
-	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
+	Md5Hash hash(url, true); string url_key = hash.get(); 
 	this->master.add_url(url, url_key);
-	this->master.write();
 }
 
 void RepositoryManager::remove(string url) {
 	/*find key associated to url, tell RainbowTable to remove everything associated with
 	key, then save */
-	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
+	md5lib hash(url, true); string url_key = hash.get(); 
 	//master.search(k);
 	this->master.remove(url_key);
-	this->master.write();
 }
 
 void RepositoryManager::update(string url) {
 	//call remove then add
-	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
-	this->master.remove(url_key);
-	this->master.add_url(url, url_key);
+	md5lib hash(url, true); string url_key = hash.get(); 
+	master.remove(url_key);
+	master.add_url(url, url_key);
 }
