@@ -39,7 +39,30 @@ class inputParser{
 				return HELP;
 			} else return BAD_INPUT;
 		}
+
+		static void usage(string name) {
+			cout << " __  __ ____  ____    _            ____                  " << endl;
+			cout << "|  \\/  |  _ \\| ___|  / \\__      __/ ___| _   _ _ __ ___  " << endl;
+			cout << "| |\\/| | | | |___ \\ / _ \\ \\ /\\ / /\\___ \\| | | | '_ ` _ \\ " << endl;
+			cout << "| |  | | |_| |___) / ___ \\ V  V /  ___) | |_| | | | | | |" << endl;
+			cout << "|_|  |_|____/|____/_/   \\_\\_/\\_/  |____/ \\__,_|_| |_| |_|" << endl;
+			cout << endl;
+			cout << "Usage: " << name << " [options]" << endl;
+			cout << "\nOptions: " << endl;
+			cout << "\t-h, --help\t\tshow this information" << endl;
+			cout << "\t-v, --verbose\t\tverbose output (default quiet)" << endl;
+			//modify the following to be correct and more helpful
+			cout << "\t-l, --lookup\t\tlookup text" << endl;
+			cout << "\t-a, --add\t\tadd text" << endl;
+			cout << "\t-r, --remove\t\tremove text" << endl;
+			cout << "\t-u, --update\t\tupdate text" << endl;
+		}
 };
+
+int main() {
+	inputParser::usage("MD5AwSum");
+	return 0;
+}
 
 
   
