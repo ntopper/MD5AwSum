@@ -21,9 +21,11 @@ class RainbowTable {
 		void remove(string &key);
 		void write();
 		void add_url(string &url, string &key) throw(int);
+		string getPath();
 
 		//errors
 		const static int ERROR_READING_FILE;
+		
 
 	private:
 		string file_path;
