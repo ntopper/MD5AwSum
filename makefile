@@ -5,9 +5,9 @@ TARGET=testmd5
 
 all: $(TARGET)
 
-$(TARGET): build md5lib md5libtest
+$(TARGET): build md5lib md5libtest Md5Hash
 	@printf 'building executable... '
-	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)md5libtest.o -o $(TARGET)
+	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)md5libtest.o $(BUILDDIR)Md5Hash.o -o $(TARGET)
 	@echo 'complete.'
 	@echo 'Enjoy your program!!'
 

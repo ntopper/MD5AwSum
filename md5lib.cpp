@@ -50,7 +50,7 @@ md5lib::md5lib(string path) {
 	this->size = (end-start);
 
 	//determine what breaks should be for progress bar
-	if(!(this->size)) this->sizebreak = 1;
+	if(!(this->size) || this->size < 100) this->sizebreak = 1;
 	else this->sizebreak = this->size/100;
 
 	//begin hash progress
@@ -129,10 +129,10 @@ void md5lib::process() {
 			this->digest((uint32_t *)buff);
 			length += 64;
 		}
-		if(!(length%this->sizebreak))this->progress(length);
+		if(!(length%this->sizebreak)) this->progress(length);
 	}
 	inpreader.close();
-	cout << endl;
+	if(this->size >= 100) cout << endl;
 }
 
 uint32_t md5lib::leftrotate(uint32_t x, uint32_t c) {
@@ -217,7 +217,7 @@ void md5lib::progress(uint64_t prog) {
 	uint8_t c = (3*w.ws_col/4)-2;
 
 	//check progress
-	if(!(this->size)) return;
+	if(!(this->size) || this->size < 100) return;
 	float pos = (float)prog/(float)(this->size);
 
 	//create bar

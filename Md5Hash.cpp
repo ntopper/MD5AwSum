@@ -20,14 +20,18 @@ using namespace std;
 
 Md5Hash::Md5Hash(string inpstr, bool isstr) {
 	this->checksum = "\0";
-	if (isstr) this->handleString(inpstr);
+	this->isstr = isstr;
+
+	if (this->isstr) this->handleString(inpstr);
 	else this->file_path = inpstr;
 
 	//this->checksum = md5lib::hash(this->file_path);
 	md5lib hasher(this->file_path);
 	this->checksum = hasher.get();
+}
 
-	if (isstr) this->cleanupString();
+Md5Hash::~Md5Hash() {
+	this->cleanupString();
 }
 
 void Md5Hash::handleString(string s) throw(int) {
@@ -39,8 +43,7 @@ void Md5Hash::handleString(string s) throw(int) {
 }
 
 void Md5Hash::cleanupString() throw(int) {
-	string s = "rm " + string(TMPFILEPATH);
-	popen(s.c_str(), "r");
+	if(this->isstr) remove(TMPFILEPATH);
 }
 
 string Md5Hash::getChecksum() {

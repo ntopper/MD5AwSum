@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
 	cout << "*********************************" << endl;
 
 	//calculate a checksum
-	string file = argv[1]
+	string file = argv[1];
 	cout << "calculating checksum of "  << file << endl;
 	string checksum;
 	try {Md5Hash hash(ub1310); checksum = hash.getChecksum();}
