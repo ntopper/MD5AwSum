@@ -42,12 +42,18 @@ md5lib::md5lib(string path) {
 	this->result = "\0";
 
 	//determine size of the file
-	streampos start, end;
-	ifstream f(this->file_path, ios::binary);
-	start = f.tellg();
-	f.seekg(0,ios::end);
-	end = f.tellg();
-	this->size = (end-start);
+	try {
+		streampos start, end;
+		ifstream f(this->file_path, ios::binary);
+		start = f.tellg();
+		f.seekg(0,ios::end);
+		end = f.tellg();
+		this->size = (end-start);
+		f.close();
+	} catch(exception e) {
+		cerr << "[Error] Could not determine file size" << endl;
+		return;
+	}
 
 	//determine what breaks should be for progress bar
 	if(!(this->size) || this->size < 100) this->sizebreak = 1;
@@ -78,61 +84,66 @@ void md5lib::initialize() {
 
 void md5lib::process() {
 	//initialize variables
-	ifstream inpreader(this->file_path, ios::binary);
-	uint64_t length = 0;
-	bool alive = true;
-	char buff[MESSAGESIZE+1];
+	try {
+		ifstream inpreader(this->file_path, ios::binary);
+		uint64_t length = 0;
+		bool alive = true;
+		char buff[MESSAGESIZE+1];
 
-	while(alive) {
-		//clean buffer and read 512 bits
-		memset(buff, 0, MESSAGESIZE+1);
-		inpreader.read(buff, MESSAGESIZE);
+		while(alive) {
+			//clean buffer and read 512 bits
+			memset(buff, 0, MESSAGESIZE+1);
+			inpreader.read(buff, MESSAGESIZE);
 
-		if (inpreader.eof()) {
-			//set up buffers/variables and clean memory
-			uint8_t output[256];
-			memset(output, 0, 255);
-			uint64_t new_length;
-			uint64_t tmplength = length;
+			if (inpreader.eof()) {
+				//set up buffers/variables and clean memory
+				uint8_t output[256];
+				memset(output, 0, 255);
+				uint64_t new_length;
+				uint64_t tmplength = length;
 
-			//calculate new length after padding
-			length += strlen(buff);
-			for(new_length = length+1; new_length%64 != 56; new_length++);
+				//calculate new length after padding
+				length += strlen(buff);
+				for(new_length = length+1; new_length%64 != 56; new_length++);
 
-			//copy bits that were read to the buffer to be padded
-			memcpy(output, buff, strlen(buff));
+				//copy bits that were read to the buffer to be padded
+				memcpy(output, buff, strlen(buff));
 
-			//append '1' bit and 0's to new length
-			uint8_t *first = output + length - tmplength;
-			uint8_t *last = output + new_length - tmplength + 7; //- 1 + 8;
-			fill(first, last, 0);
-			*first = 0x80;
+				//append '1' bit and 0's to new length
+				uint8_t *first = output + length - tmplength;
+				uint8_t *last = output + new_length - tmplength + 7; //- 1 + 8;
+				fill(first, last, 0);
+				*first = 0x80;
 
-			//append length in bits, converted to little endian
-			uint64_t bits = length*8;
-			uint8_t *rev = reinterpret_cast<uint8_t*>(&bits);
-			for (int i=0, j=7; j>=0; ++i, --j) {
-				*(last - i) = *(rev + j);
+				//append length in bits, converted to little endian
+				uint64_t bits = length*8;
+				uint8_t *rev = reinterpret_cast<uint8_t*>(&bits);
+				for (int i=0, j=7; j>=0; ++i, --j) {
+					*(last - i) = *(rev + j);
+				}
+
+				//push to digest algorithm
+				int chunk = (new_length-tmplength+64)/64;
+				for(int i = 0; i < chunk; i++) {
+					uint8_t tmp[MESSAGESIZE];
+					memset(tmp,0,MESSAGESIZE);
+					memcpy(tmp, output+i*MESSAGESIZE, MESSAGESIZE);
+					this->digest((uint32_t *)tmp);
+				}
+
+				alive = false;
+			} else {
+				this->digest((uint32_t *)buff);
+				length += 64;
 			}
-
-			//push to digest algorithm
-			int chunk = (new_length-tmplength+64)/64;
-			for(int i = 0; i < chunk; i++) {
-				uint8_t tmp[MESSAGESIZE];
-				memset(tmp,0,MESSAGESIZE);
-				memcpy(tmp, output+i*MESSAGESIZE, MESSAGESIZE);
-				this->digest((uint32_t *)tmp);
-			}
-
-			alive = false;
-		} else {
-			this->digest((uint32_t *)buff);
-			length += 64;
+			if(!(length%this->sizebreak)) this->progress(length);
 		}
-		if(!(length%this->sizebreak)) this->progress(length);
+		inpreader.close();
+		if(this->size >= 100) cout << endl;
+	} catch (exception e) {
+		cerr << "[Error] Could not read file" << endl;
+		return;
 	}
-	inpreader.close();
-	if(this->size >= 100) cout << endl;
 }
 
 uint32_t md5lib::leftrotate(uint32_t x, uint32_t c) {
