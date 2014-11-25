@@ -2,8 +2,8 @@
 #include <fstream>
 #include <string>
 #include <stdio.h>
-#include "Md5Hash.h"
-#include "md5lib.h"
+#include "headers/Md5Hash.h"
+#include "headers/md5lib.h"
 
 #define HASHERROR 1
 #define STRINGFILEERROR 2

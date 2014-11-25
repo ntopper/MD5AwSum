@@ -1,6 +1,8 @@
 CC=g++
 CFLAGS=-Wall -std=c++11 -c
 BUILDDIR=build/
+SRC=src/
+HEAD=src/headers/
 TARGET=testmd5
 
 all: $(TARGET)
@@ -16,19 +18,19 @@ build:
 	@mkdir $(BUILDDIR)
 	@echo 'complete.'
 
-md5lib: md5lib.cpp md5lib.h
+md5lib: $(SRC)md5lib.cpp $(HEAD)md5lib.h
 	@printf	'building md5lib...\t\t'
-	@$(CC) $(CFLAGS) md5lib.cpp -o $(BUILDDIR)md5lib.o
+	@$(CC) $(CFLAGS) $(SRC)md5lib.cpp -o $(BUILDDIR)md5lib.o
 	@echo 'complete.'
 
-md5libtest: tempfiles md5libtest.cpp md5lib.h
+md5libtest: tempfiles $(SRC)md5libtest.cpp $(HEAD)md5lib.h
 	@printf 'building md5libtest...\t\t'
-	@$(CC) $(CFLAGS) md5libtest.cpp -o $(BUILDDIR)md5libtest.o
+	@$(CC) $(CFLAGS) $(SRC)md5libtest.cpp -o $(BUILDDIR)md5libtest.o
 	@echo 'complete.'
 
-Md5Hash: Md5Hash.cpp Md5Hash.h
+Md5Hash: $(SRC)Md5Hash.cpp $(HEAD)Md5Hash.h
 	@printf 'building Md5Hash...\t\t'
-	@$(CC) $(CFLAGS) Md5Hash.cpp -o $(BUILDDIR)Md5Hash.o
+	@$(CC) $(CFLAGS) $(SRC)Md5Hash.cpp -o $(BUILDDIR)Md5Hash.o
 	@echo 'complete.'
 
 tempfiles:

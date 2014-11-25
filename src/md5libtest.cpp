@@ -3,8 +3,8 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <time.h>
-#include "md5lib.h"
-#include "Md5Hash.h"
+#include "headers/md5lib.h"
+#include "headers/Md5Hash.h"
 
 #define PATH1 "/tmp/.testfile"
 #define PATH2 "/tmp/.emptyfile"

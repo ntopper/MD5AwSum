@@ -1,7 +1,5 @@
-#include "md5lib.h"
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -9,16 +7,12 @@
 #include <cmath>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include "headers/md5lib.h"
 
 #define HASHERROR 1
 #define HASHSIZE 33
 #define MESSAGESIZE 64
 
-//http://stackoverflow.com/questions/7656219/c-c-function-for-generating-a-hash-for-passwords-using-md5-or-another-algorit
-//http://bobobobo.wordpress.com/2010/10/17/md5-c-implementation/
-
-//consider removing for loops in digest to speed up algorithm?
-//sacrifice readability?
 
 using namespace std;
 
