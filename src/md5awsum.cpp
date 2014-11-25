@@ -42,12 +42,12 @@ int main (int argc, char* argv[]) {
 		case UPDATE: //update one (given a url) or all of the stored repositories
 
 			//if no url argument is given, update all
-			if (argc < 2) {prog.update();}
+			if (argc == 2) {prog.update();}
 			
 			//otherwize update the given URL
 			else {
 				argument_string = argv[2];
-				prog.remove(argument_string);
+				prog.update(argument_string);
 			}
 			break;
 
