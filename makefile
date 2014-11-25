@@ -5,9 +5,9 @@ SRC=src/
 HEAD=src/headers/
 TARGET=MD5AwSum
 
-all: $(TARGET)
+all: build md5lib Md5Hash pugixml RainbowTable RepositoryManager inputParser md5awsum $(TARGET)
 
-$(TARGET): build md5lib Md5Hash pugixml RainbowTable RepositoryManager inputParser md5awsum
+$(TARGET): $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)inputParser.o $(BUILDDIR)md5awsum.o
 	@printf 'building executable...\t\t'
 	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)inputParser.o $(BUILDDIR)md5awsum.o -o $(TARGET)
 	@echo 'complete.'
