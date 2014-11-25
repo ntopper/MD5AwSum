@@ -12,6 +12,7 @@
 #define HASHERROR 1
 #define HASHSIZE 33
 #define MESSAGESIZE 64
+#define MINSIZE 1000
 
 
 using namespace std;
@@ -50,7 +51,7 @@ md5lib::md5lib(string path) {
 	}
 
 	//determine what breaks should be for progress bar
-	if(!(this->size) || this->size < 100) this->sizebreak = 1;
+	if(!(this->size) || this->size < MINSIZE) this->sizebreak = 1;
 	else this->sizebreak = this->size/100;
 
 	//begin hash progress
@@ -133,7 +134,7 @@ void md5lib::process() {
 			if(!(length%this->sizebreak)) this->progress(length);
 		}
 		inpreader.close();
-		if(this->size >= 100) cout << endl;
+		if(this->size >= MINSIZE) cout << endl;
 	} catch (exception e) {
 		cerr << "[Error] Could not read file" << endl;
 		return;
@@ -222,7 +223,7 @@ void md5lib::progress(uint64_t prog) {
 	uint8_t c = (3*w.ws_col/4)-2;
 
 	//check progress
-	if(!(this->size) || this->size < 100) return;
+	if(!(this->size) || this->size < MINSIZE) return;
 	float pos = (float)prog/(float)(this->size);
 
 	//create bar

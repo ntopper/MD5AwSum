@@ -57,6 +57,9 @@ md5libtest: build tempfiles $(SRC)md5libtest.cpp $(HEAD)md5lib.h
 	@printf 'building md5libtest...\t\t'
 	@$(CC) $(CFLAGS) $(SRC)md5libtest.cpp -o $(BUILDDIR)md5libtest.o
 	@echo 'complete.'
+	@printf 'building testmd5 executable...\t'
+	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)md5libtest.o -o testmd5
+	@echo 'complete.'
 
 tempfiles:
 	@printf 'building testfiles...\t\t'
