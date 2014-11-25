@@ -40,24 +40,25 @@ md5lib::md5lib(string path) {
 	try {
 		streampos start, end;
 		ifstream f(this->file_path, ios::binary);
+		if(f.fail()) throw exception();
 		start = f.tellg();
 		f.seekg(0,ios::end);
 		end = f.tellg();
 		this->size = (end-start);
 		f.close();
+
+		//determine what breaks should be for progress bar
+		if(!(this->size) || this->size < MINSIZE) this->sizebreak = 1;
+		else this->sizebreak = this->size/100;
+
+		//begin hash progress
+		this->initialize();
+		this->process();
+		this->finalize();
 	} catch(exception e) {
 		cerr << "[Error] Could not determine file size" << endl;
 		return;
 	}
-
-	//determine what breaks should be for progress bar
-	if(!(this->size) || this->size < MINSIZE) this->sizebreak = 1;
-	else this->sizebreak = this->size/100;
-
-	//begin hash progress
-	this->initialize();
-	this->process();
-	this->finalize();
 }
 
 string md5lib::get() {
