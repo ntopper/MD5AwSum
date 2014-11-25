@@ -2,10 +2,9 @@
 #define RAINBOW_TABLE_H
 
 #define PUGIXML_HEADER_ONLY
-#include "pugixml.cpp"
 #include "pugixml.hpp"
-
 #include <string>
+
 using namespace std;
 
 
@@ -19,6 +18,7 @@ class RainbowTable {
 		void search(string &hash);
 		void add(string &file_path, string &key) throw(int);
 		void remove(string &key);
+		void update_all();
 		void write();
 		void add_url(string &url, string &key) throw(int);
 		string getPath();

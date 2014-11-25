@@ -1,6 +1,6 @@
-#include "RepositoryManager.h"
-#include "RainbowTable.h"
-#include "Md5Hash.h"
+#include "headers/RepositoryManager.h"
+#include "headers/RainbowTable.h"
+#include "headers/Md5Hash.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -22,7 +22,9 @@ void RepositoryManager::add(string url) {
 	adds downloaded table to the RainbowTable 'master'
 	if exception thrown, prints error, deletes file, terminates program, otherwise
 	calls rainbowtable save method*/
-	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
+	Md5Hash hash(url, true);
+	string url_key = hash.getChecksum(); 
+	cout << url_key << endl;
 	this->master.add_url(url, url_key);
 	this->master.write();
 }
@@ -37,8 +39,20 @@ void RepositoryManager::remove(string url) {
 }
 
 void RepositoryManager::update(string url) {
-	//call remove then add
+	//calls remove then add on a url
 	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
 	this->master.remove(url_key);
 	this->master.add_url(url, url_key);
+}
+
+void RepositoryManager::update() {
+	//searches table for all "repository" entries
+	//"updates" each url found
+	this->master.update_all();
+}
+
+void RepositoryManager::print() {
+	//prints all repositories
+	string url = "repository";
+	this->master.search(url);
 }

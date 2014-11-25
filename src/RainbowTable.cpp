@@ -1,4 +1,4 @@
-#include "RainbowTable.h"
+#include "headers/RainbowTable.h"
 #include <iostream>
 #include <string>
 #include <unistd.h>
@@ -6,6 +6,9 @@
 #include <pwd.h>
 #include <fstream>
 #include <sys/stat.h>
+#include <cstring>
+#include <stack>
+#include <map>
 
 RainbowTable::RainbowTable() {
 
@@ -54,6 +57,8 @@ void RainbowTable::search(string &hash) {
         }
     }
 }
+
+
 
 void RainbowTable::print_entry(pugi::xml_node &entry) {
     //prints all data associated with node entry
@@ -111,14 +116,16 @@ void RainbowTable::remove(string &key) {
 }
 
 void RainbowTable::add(string &file_path, string &key) throw(int) {
-    //adds all "entry" elements if the document at file_path to the master xml tree
 
+    //adds all "entry" elements if the document at file_path to the master xml tree
     //try to load in the new document
+
     pugi::xml_document new_doc;
     if (!new_doc.load_file(file_path.c_str())) {
         throw(ERROR_READING_FILE);
         return;
     }
+
     pugi::xml_node new_root = new_doc.child("RainbowTable");
     pugi::xml_node old_root = this->tree.child("RainbowTable");
 
@@ -156,10 +163,53 @@ void RainbowTable::add_url(string &url, string &key) throw(int) {
 	//attempt to parse and add to repo
 	this->add(temp_file, key);
 	
+    //add the repository sourse as an entry
+    pugi::xml_node root = this->tree.child("RainbowTable");
+    pugi::xml_node entry = root.append_child();
+    entry.set_name("entry");
+    entry.append_attribute("key") = key.c_str();
+    entry.append_attribute("name") = url.c_str();
+    entry.append_attribute("hash") = "repository";
+
+    //write new tree to file
 	this->write();
+
 	//remove the temp file and return
 	system(rm.c_str());
 	return;
+}
+
+void RainbowTable::update_all() {
+    stack<string> urls;
+    map<string, string> keys;
+    string hash = "repository";
+    pugi::xml_node root = this->tree.child("RainbowTable");
+
+    //search through child nodes
+    for (pugi::xml_node entry = root.first_child();
+            entry;
+            entry = entry.next_sibling()) {
+
+        const char * entry_hash = entry.attribute("hash").value();
+
+        //push each "repository" entry onto the stack
+        if(strcmp(entry_hash, hash.c_str()) == 0) {
+            string url = entry.attribute("name").value();
+            keys[url] = entry.attribute("key").value();
+            urls.push(url);
+        }
+    }
+
+    //remove and add each URL on the stack
+    while (!urls.empty()) {
+
+        this->remove(urls.top());
+        try { 
+            this->add_url(urls.top(), keys[urls.top()]);
+        } catch (int e) {cout << "Omitting broken repository " << urls.top() << endl;}
+        urls.pop();
+    }
+
 }
 
 string RainbowTable::getPath() {

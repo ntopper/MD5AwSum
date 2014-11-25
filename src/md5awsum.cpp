@@ -4,7 +4,7 @@
 #include "RainbowTable.h"
 #include "src/headers/Md5Hash.h"
 #include "inputParser.cpp"
-#include "RepositoryManager.h"
+#include "headers/RepositoryManager.h"
 
 using namespace std;
 

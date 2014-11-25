@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string>
 
-#include "RainbowTable.h"
-#include "RepositoryManager.h"
-#include "Md5Hash.h"
+#include "headers/RainbowTable.h"
+#include "headers/RepositoryManager.h"
+#include "headers/Md5Hash.h"
 
 using namespace std;
 
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 	string file = argv[1];
 	cout << "calculating checksum of "  << file << endl;
 	string checksum;
-	try {Md5Hash hash(ub1310); checksum = hash.getChecksum();}
+	try {Md5Hash hash(file); checksum = hash.getChecksum();}
 	catch (int e) {
 			{cout << "error hashing file" <<endl;}
 	}
@@ -84,6 +84,11 @@ int main(int argc, char* argv[]) {
 		if(e == RainbowTable::ERROR_READING_FILE)
 			{cout << "error parsing local repository" << endl;}
 	}
+
 	cout << "searching repository" << endl;
 	table.search(checksum);
+
+	cout << "updating all" << endl;
+
+	man.update();
 }
