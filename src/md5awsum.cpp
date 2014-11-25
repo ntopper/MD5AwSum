@@ -47,7 +47,7 @@ int main (int argc, char* argv[]) {
 			//otherwize update the given URL
 			else {
 				argument_string = argv[2];
-				prog.remove(argument_string);
+				prog.update(argument_string);
 			}
 			break;
 
