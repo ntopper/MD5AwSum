@@ -8,39 +8,47 @@ using namespace std;
 #define REMOVE 2
 #define UPDATE 3
 #define HELP 4
-#define BAD_INPUT 5
-#define CHECKSOME 6
-
-/*
- * argv[0] is the name of the program
- * we want argv[1] assuming this is argv directly
- * from main. Will HELP and BAD_INPUT be the same
- * in the end because they result in printing the 
- * usage text? are we going to implement the usage 
- * text in this class? things to consider
- */
+#define CHECKSUM 5
 
 class inputParser{
 	public:
 		static int parseInput(int argc, char* argv[]){
+
+			//not enough arguments, return help
+			if(argc < 2) return HELP;
+		
+			//lookup flag, return LOOKUP if 3 arguments given
 			if(!strcmp(argv[1], "--lookup") || !strcmp(argv[1], "-l")) {
-				if(argc != 3) return BAD_INPUT;			
+				if(argc != 3) return HELP;			
 				return LOOKUP;
-			} else if(!strcmp(argv[1], "--add") || !strcmp(argv[1], "-a")) {
-				if(argc != 3) return BAD_INPUT;			
+			} 
+			
+			//add flag, return ADD if 3 arguments given
+			else if(!strcmp(argv[1], "--add") || !strcmp(argv[1], "-a")) {
+				
+				if(argc != 3) return HELP;			
 				return ADD;
-			} else if(!strcmp(argv[1], "--remove") || !strcmp(argv[1], "-r")){
-				if(argc != 3) return BAD_INPUT;
+			} 
+			
+			//remove flag, return REMOVE if 3 arguments given
+			else if(!strcmp(argv[1], "--remove") || !strcmp(argv[1], "-r")){
+				if(argc != 3) return HELP;
 				return REMOVE;
-			} else if(!strcmp(argv[1], "--update") || !strcmp(argv[1], "-u")){
-				if(argc != 3) return BAD_INPUT;
+			} 
+			
+			//update flag, return UPDATE if less than 4 arguments given
+			else if(!strcmp(argv[1], "--update") || !strcmp(argv[1], "-u")){
+				if(argc > 3) return HELP;
 				return UPDATE;
-			} else if(!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")){
-				if(argc != 3) return BAD_INPUT;
-				return HELP;
-			} else if (argc == 2){
-				return CHECKSOME;
-			} else return BAD_INPUT;
+			} 
+			
+			//two arguments and no flags, the given argument must be a filepath
+			else if (argc == 2){
+				return CHECKSUM;
+			} 
+			
+			//default instruction to print usage
+			else return HELP;
 		}
 
 		static void usage() {

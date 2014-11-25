@@ -6,50 +6,60 @@
 #include <iostream>
 #include <string>
 
+#define LOOKUP 0 
+#define ADD 1
+#define REMOVE 2
+#define UPDATE 3
+#define HELP 4
+#define CHECKSUM 5
+
 using namespace std;
 
-//please use the included header file :)
 
 int main (int argc, char* argv[]) {
 	md5awsum prog;
-	string hashOrUrl = 0;
-	switch(inputParser::parseInput(argc, argv)) {		//depending on what parseInput returns...(0,1,2,3,4, or 5)
-		case 0:
-			//parseInput returns 0 if it parsed the argument "lookup"
-			//so we do a lookup on the argument in argv[2], presumably the hash of the program
-			hashOrUrl = argv[2];
-			prog.lookup(hashOrUrl, false);
+	string argument_string;
+	
+	//return value of parseInput determines what the user would like to do
+	int choice = inputParser::parseInput(argc, argv);
+	
+	switch(choice) {
+		case LOOKUP: //reverse lookup from given hash string
+			argument_string = argv[2];
+			prog.lookup(argument_string, false);
 			break;
-		case 1:
-			//parseInput returns 1 if it parsed the argument "add"
-			//so we add the url in argv[2], presumably the url of a new repository
-			hashOrUrl = argv[2];
-			prog.add(hashOrUrl);
+			
+		case ADD: //add a repository given a url
+			argument_string = argv[2];
+			prog.add(argument_string);
 			break;
-		case 2:
-			//parseInput returns 2 if it parsed the argument "remove"
-			//so we remove the url in argv[2], presumably the url of an existing repository
-			hashOrUrl = argv[2];
-			prog.remove(hashOrUrl);
+			
+		case REMOVE: //remove a repository given a url
+			argument_string = argv[2];
+			prog.remove(argument_string);
 			break;
-		case 3:
-			//parseInput returns 3 if it parsed the argument "update"
-			//so we update the url in argv[2], presumably the url of an existing repository
-			hashOrUrl = argv[2];
-			prog.remove(hashOrUrl);
+			
+		case UPDATE: //update one (given a url) or all of the stored repositories
+
+			//if no url argument is given, update all
+			if (argc < 2) {prog.update();}
+			
+			//otherwize update the given URL
+			else {
+				argument_string = argv[2];
+				prog.remove(argument_string);
+			}
 			break;
-		case 5:
-			cerr << "Error bad input." << endl;
-		case 4:
-			//handles case 4 and 5
-			//print help/readme
+
+		
+		case CHECKSUM://hash file at a given filepath and lookup the resulting cecksum
+			
+			argument_string = argv[1];
+			prog.lookup(argument_string, true);
+			break;
+			
+		case HELP:
 			inputParser::usage();
-			break;
-		case 6:
-			//parseInput returns 6 if it parsed only one argument after the program name
-			//so we do a lookup on the url in argv[1], presumably the filepath of the program name
-			string filepath = argv[1];
-			prog.lookup(filepath, true);
 			break;
 	}
 	return 0;
@@ -68,7 +78,6 @@ void md5awsum::lookup(string inString, bool isFile){
 		}
 	 } else hash = inString;
 	
-    //finds hash table location in config class singleton instance
     searchTable(hash);
 }
 
@@ -85,13 +94,11 @@ void md5awsum::searchTable(string hash){
 }
 
 void md5awsum::add(string url){
-	//wiki says config.initialize(). What do?
 	RepositoryManager repoMan;
 	repoMan.add(url);
 }
 
 void md5awsum::remove(string url){
-	//wiki says config.initialize(). What do?
 	RepositoryManager repoMan;
 	repoMan.remove(url);
 }
@@ -101,10 +108,8 @@ void md5awsum::update(string url){
 	repoMan.update(url);
 }
 
-/*
- * THERE IS NO FUNCTION IN REPOSITORYMANAGER TO UPDATE ALL WTF MAN
-void update(){
+
+void md5awsum::update() {
 	RepositoryManager repoMan;
-	repoMan.update(ALL);
+	repoMan.update();
 }
-*/
