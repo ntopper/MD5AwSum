@@ -10,6 +10,7 @@ class md5awsum {
 		void add(string);
 		void remove(string);
 		void update(string);
+		void update();
 		void searchTable(string);
 };
 
