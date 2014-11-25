@@ -1,3 +1,6 @@
+#ifndef MD5HASH_H
+#define MD5HASH_H
+
 #include <iostream>
 #include <string>
 
@@ -16,3 +19,5 @@ class Md5Hash {
 		~Md5Hash();
 		string getChecksum();
 };
+
+#endif

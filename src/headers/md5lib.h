@@ -1,3 +1,6 @@
+#ifndef MD5LIB_H
+#define MD5LIB_H
+
 #include <string>
 #include <stdint.h>
 using namespace std;
@@ -25,3 +28,5 @@ class md5lib {
 		md5lib(string);
 		string get();
 };
+
+#endif
