@@ -1,13 +1,13 @@
 #include <iostream>
+#include <fstream>
 #include <string.h>
-#include <stdint.h>
 #include <unistd.h>
 #include <time.h>
 #include "headers/md5lib.h"
-#include "headers/Md5Hash.h"
 
 #define PATH1 "/tmp/.testfile"
 #define PATH2 "/tmp/.emptyfile"
+#define PATH3 "/tmp/.THISISATEMPORARYFILE"
 
 int main(int argc, char *argv[]) {
 	string hash;
@@ -32,18 +32,25 @@ int main(int argc, char *argv[]) {
 	clock_t stop4 = clock();
 	cout << "  compared to:\t[" << hash << "] in " << float(stop4 - start4) / CLOCKS_PER_SEC << "s" << endl;
 
-	cout << "\nTesting Md5Hash strings..." << endl;
+	cout << "\nFinal Test Phase..." << endl;
 	srand(time(0));
-	for(int i = 0; i < 50; i++) {
+	for(int i = 0; i < 1000; i++) {
 		char buff[52];
 		memset(buff,0,52);
 		for(int j = 0; j < 50; j++) {
 			buff[j] = (char)(rand()%77 + 48);
 		}
-		Md5Hash a(buff,true);
-		printf("test #%02d -> %s -> [%s]\n",i+1,buff,a.getChecksum().c_str());
-		usleep(100000);
-	}
+		
+		ofstream f(PATH3);
+		f << buff;
+		f.close();
 
+		string a1 = md5lib::hash(PATH3);
+		string a2 = md5lib(PATH3).get();
+
+		printf("\r#%03d",i);
+		if (strcmp(a1.c_str(),a2.c_str())) cerr << " [FAILED] " << buff << endl;
+	}
+	cout << endl;
 	return 0;
 }

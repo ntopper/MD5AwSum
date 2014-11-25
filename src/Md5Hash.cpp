@@ -35,8 +35,7 @@ Md5Hash::~Md5Hash() {
 }
 
 void Md5Hash::handleString(string s) throw(int) {
-	ofstream f;
-	f.open(TMPFILEPATH);
+	ofstream f(TMPFILEPATH);
 	f << s;
 	f.close();
 	this->file_path = TMPFILEPATH;
