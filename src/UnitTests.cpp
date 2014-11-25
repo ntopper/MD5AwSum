@@ -1,11 +1,10 @@
+#include "headers/RainbowTable.h"
+#include "headers/RepositoryManager.h"
+#include "headers/Md5Hash.h"
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-
-#include "headers/RainbowTable.h"
-#include "headers/RepositoryManager.h"
-#include "headers/Md5Hash.h"
 
 using namespace std;
 

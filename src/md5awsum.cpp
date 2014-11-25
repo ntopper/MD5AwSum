@@ -1,10 +1,10 @@
+#include "headers/md5awsum.h"
+#include "headers/RainbowTable.h"
+#include "headers/Md5Hash.h"
+#include "headers/RepositoryManager.h"
+#include "inputParser.cpp"
 #include <iostream>
 #include <string>
-#include "md5awsum.h"
-#include "RainbowTable.h"
-#include "src/headers/Md5Hash.h"
-#include "inputParser.cpp"
-#include "headers/RepositoryManager.h"
 
 using namespace std;
 

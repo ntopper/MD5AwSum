@@ -1,9 +1,9 @@
+#include "headers/md5lib.h"
 #include <iostream>
 #include <fstream>
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
-#include "headers/md5lib.h"
 
 #define PATH1 "/tmp/.testfile"
 #define PATH2 "/tmp/.emptyfile"

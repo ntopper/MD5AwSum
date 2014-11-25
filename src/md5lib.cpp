@@ -1,3 +1,4 @@
+#include "headers/md5lib.h"
 #include <iostream>
 #include <fstream>
 #include <string.h>
@@ -7,7 +8,6 @@
 #include <cmath>
 #include <sys/ioctl.h>
 #include <unistd.h>
-#include "headers/md5lib.h"
 
 #define HASHERROR 1
 #define HASHSIZE 33
