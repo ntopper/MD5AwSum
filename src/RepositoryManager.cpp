@@ -24,7 +24,6 @@ void RepositoryManager::add(string url) {
 	calls rainbowtable save method*/
 	Md5Hash hash(url, true);
 	string url_key = hash.getChecksum(); 
-	cout << url_key << endl;
 	this->master.add_url(url, url_key);
 	this->master.write();
 }
@@ -43,12 +42,14 @@ void RepositoryManager::update(string url) {
 	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
 	this->master.remove(url_key);
 	this->master.add_url(url, url_key);
+	this->master.write();
 }
 
 void RepositoryManager::update() {
 	//searches table for all "repository" entries
 	//"updates" each url found
 	this->master.update_all();
+	this->master.write();
 }
 
 void RepositoryManager::print() {
