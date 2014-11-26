@@ -14,6 +14,7 @@
 #define HELP 4
 #define CHECKSUM 5
 #define DOWNLOAD 6
+#define SOURCES 7
 
 using namespace std;
 
@@ -64,10 +65,16 @@ int main (int argc, char* argv[]) {
 			argument_string = argv[1];
 			prog.lookup(argument_string, true);
 			break;
+
+		case SOURCES: //search for all entires labeld as "repository"
+			argument_string = "repository";
+			prog.lookup(argument_string, false);
+			break;
 			
 		case HELP:
 			inputParser::usage();
 			break;
+
 	}
 	return 0;
 }
