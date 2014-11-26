@@ -21,6 +21,8 @@ using namespace std;
 int main (int argc, char* argv[]) {
 	md5awsum prog;
 	string argument_string;
+
+	inputParser::head();
 	
 	//return value of parseInput determines what the user would like to do
 	int choice = inputParser::parseInput(argc, argv);

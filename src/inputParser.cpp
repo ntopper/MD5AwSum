@@ -58,22 +58,26 @@ class inputParser{
 			else return HELP;
 		}
 
-		static void usage() {
+		static void head() {
 			cout << " __  __ ____  ____    _            ____                  " << endl;
 			cout << "|  \\/  |  _ \\| ___|  / \\__      __/ ___| _   _ _ __ ___  " << endl;
 			cout << "| |\\/| | | | |___ \\ / _ \\ \\ /\\ / /\\___ \\| | | | '_ ` _ \\ " << endl;
 			cout << "| |  | | |_| |___) / ___ \\ V  V /  ___) | |_| | | | | | |" << endl;
 			cout << "|_|  |_|____/|____/_/   \\_\\_/\\_/  |____/ \\__,_|_| |_| |_|" << endl;
 			cout << endl;
+		}
+
+		static void usage() {
 			cout << "Usage: MD5AwSum [options]" << endl;
 			cout << "\nOptions: " << endl;
 			cout << "\t-h, --help\t\tshow this information" << endl;
-			cout << "\t-v, --verbose\t\tverbose output (default quiet)" << endl;
+			cout << "\t-q, --quiet\t\tsupress output (default verbose)" << endl;
 			//modify the following to be correct and more helpful
-			cout << "\t-l, --lookup\t\tlookup text" << endl;
-			cout << "\t-a, --add\t\tadd text" << endl;
-			cout << "\t-r, --remove\t\tremove text" << endl;
-			cout << "\t-u, --update\t\tupdate text" << endl;
+			cout << "\t-l, --lookup\t\tlookup the given hash" << endl;
+			cout << "\t-a, --add\t\tadd the given url to the local table" << endl;
+			cout << "\t-r, --remove\t\tremove the given url from the local table" << endl;
+			cout << "\t-d, --download\t\tdownload the given url and lookup" << endl;
+			cout << "\t-u, --update\t\tupdate the local table, updates\n\t\t\t\tall urls if it is not specified" << endl;
 		}
 };
 
