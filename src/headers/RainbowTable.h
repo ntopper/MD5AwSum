@@ -21,6 +21,7 @@ class RainbowTable {
 		void update_all();
 		void write();
 		void add_url(string &url, string &key) throw(int);
+		bool find_repo(string url);
 		string getPath();
 
 		//errors

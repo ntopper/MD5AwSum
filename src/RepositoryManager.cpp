@@ -22,6 +22,14 @@ void RepositoryManager::add(string url) {
 	adds downloaded table to the RainbowTable 'master'
 	if exception thrown, prints error, deletes file, terminates program, otherwise
 	calls rainbowtable save method*/
+
+	//do not add redundently
+	if (this->master.find_repo(url)) {
+        cout << "This repository has already been added!" << endl;
+        cout << "try -u <repository url> to add" << endl; 
+        return;
+    }
+
 	Md5Hash hash(url, true);
 	string url_key = hash.getChecksum(); 
 	this->master.add_url(url, url_key);
@@ -38,6 +46,14 @@ void RepositoryManager::remove(string url) {
 }
 
 void RepositoryManager::update(string url) {
+
+	//do not update if repo does not exist
+	if (!this->master.find_repo(url)) {
+        cout << "This repository has not been added!" << endl;
+        cout << "try -a <repository url> to update" << endl; 
+        return;
+    }
+
 	//calls remove then add on a url
 	Md5Hash hash(url, true); string url_key = hash.getChecksum(); 
 	this->master.remove(url_key);

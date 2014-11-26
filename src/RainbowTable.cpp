@@ -97,8 +97,8 @@ void RainbowTable::print_entry(pugi::xml_node &entry) {
 }
 
 void RainbowTable::remove(string &key) {
-    //remove all entrys with 'key' of key
 
+    //remove all entrys with 'key' of key
     pugi::xml_node root = this->tree.child("RainbowTable");
 
     //search through child nodes
@@ -203,13 +203,35 @@ void RainbowTable::update_all() {
     //remove and add each URL on the stack
     while (!urls.empty()) {
 
-        this->remove(urls.top());
+        this->remove(keys[urls.top()]);
         try { 
             this->add_url(urls.top(), keys[urls.top()]);
         } catch (int e) {cout << "Omitting broken repository " << urls.top() << endl;}
         urls.pop();
     }
 
+}
+
+bool RainbowTable::find_repo(string url) {
+    //search for all 'repository' entrys, and return true if any URL matches the url paramater
+
+    string hash = "repository";
+    pugi::xml_node root = this->tree.child("RainbowTable");
+
+    //search through child nodes
+    for (pugi::xml_node entry = root.first_child();
+            entry;
+            entry = entry.next_sibling()) {
+
+        const char * name = entry.attribute("name").value();
+
+        //push each "repository" entry onto the stack
+        if(strcmp(name, url.c_str()) == 0) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 string RainbowTable::getPath() {
