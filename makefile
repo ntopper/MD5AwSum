@@ -48,7 +48,7 @@ inputParser: build $(SRC)inputParser.cpp $(HEAD)md5awsum.h
 	@$(CC) $(CFLAGS) $(SRC)inputParser.cpp -o $(BUILDDIR)inputParser.o
 	@echo 'complete.'
 
-md5awsum: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)RainbowTable.h $(HEAD)Md5Hash.h $(HEAD)RepositoryManager.h $(SRC)inputParser.cpp
+md5awsum: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)RainbowTable.h $(HEAD)Md5Hash.h $(HEAD)RepositoryManager.h
 	@printf 'building md5awsum...\t\t'
 	@$(CC) $(CFLAGS) $(SRC)md5awsum.cpp -o $(BUILDDIR)md5awsum.o
 	@echo 'complete.'

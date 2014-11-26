@@ -2,8 +2,8 @@
 #include "headers/RainbowTable.h"
 #include "headers/Md5Hash.h"
 #include "headers/RepositoryManager.h"
-#include "inputParser.cpp"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <stdio.h>
 
@@ -70,6 +70,18 @@ void md5awsum::download(string url){
 	//pass to lookup
 	cout << "Download complete -> " << filename << endl;
 	lookup(filename, true);
+}
+
+void md5awsum::addFromFile(string filename) {
+	ifstream f(filename);
+	char url[256];
+
+	while (true) {
+		f.getline(url,256);
+		if(f.fail()) break;
+		add(url);
+	}
+	f.close();
 }
 
 void md5awsum::update(string url){

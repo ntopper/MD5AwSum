@@ -15,6 +15,7 @@ using namespace std;
 #define DOWNLOAD 6
 #define SOURCES 7
 #define QUIET 8
+#define ADDFROMFILE 9
 
 class inputParser{
 	public:
@@ -69,6 +70,12 @@ class inputParser{
 			else if(!strcmp(input, "--sources") || !strcmp(input, "-s")) {
 				if(mainFlag != 0) mainFlag = HELP;	
 				mainFlag = SOURCES;
+			}
+
+			//addfromfile flag, returns ADDFROMFILE
+			else if(!strcmp(input, "--add-from-file") || !strcmp(input, "-aff")) {
+				if(mainFlag != 0) mainFlag = HELP;
+				mainFlag = ADDFROMFILE;
 			}
 			
 			//SUBFLAGS
@@ -138,6 +145,14 @@ class inputParser{
 				case SOURCES: //search for all entires labeld as "repository"
 					argument_string = "repository";
 					prog.lookup(argument_string, false);
+					break;
+
+				case ADDFROMFILE:
+					if(!params.size()) usage();
+					else {
+						argument_string = params.front();
+						prog.addFromFile(argument_string);
+					}
 					break;
 					
 				case HELP:

@@ -13,6 +13,7 @@ class md5awsum {
 		void update();
 		void searchTable(string);
 		void download(string);
+		void addFromFile(string);
 };
 
 #endif
