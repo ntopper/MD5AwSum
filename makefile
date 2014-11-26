@@ -43,7 +43,7 @@ RepositoryManager: build $(SRC)RepositoryManager.cpp $(HEAD)RepositoryManager.h 
 	@$(CC) $(CFLAGS) $(SRC)RepositoryManager.cpp -o $(BUILDDIR)RepositoryManager.o
 	@echo 'complete.'
 
-inputParser: build $(SRC)inputParser.cpp
+inputParser: build $(SRC)inputParser.cpp $(HEAD)md5awsum.h
 	@printf 'building inputParser...\t\t'
 	@$(CC) $(CFLAGS) $(SRC)inputParser.cpp -o $(BUILDDIR)inputParser.o
 	@echo 'complete.'

@@ -88,18 +88,27 @@ class inputParser{
 
 			switch(mainFlag) {
 				case LOOKUP: //reverse lookup from given hash string
-					argument_string = params.front();
-					prog.lookup(argument_string, false);
+					if(!params.size()) usage();
+					else {
+						argument_string = params.front();
+						prog.lookup(argument_string, false);
+					}
 					break;
 					
 				case ADD: //add a repository given a url
-					argument_string = params.front();
-					prog.add(argument_string);
+					if(!params.size()) usage();
+					else {
+						argument_string = params.front();
+						prog.add(argument_string);
+					}
 					break;
 					
 				case REMOVE: //remove a repository given a url
-					argument_string = params.front();
-					prog.remove(argument_string);
+					if(!params.size()) usage();
+					else {
+						argument_string = params.front();
+						prog.remove(argument_string);
+					}
 					break;
 					
 				case UPDATE: //update one (given a url) or all of the stored repositories
@@ -114,8 +123,11 @@ class inputParser{
 					break;
 				
 				case DOWNLOAD:
-					argument_string = params.front();
-					prog.download(argument_string);
+					if(!params.size()) usage();
+					else {
+						argument_string = params.front();
+						prog.download(argument_string);
+					}
 					break;
 
 				case CHECKSUM://hash file at a given filepath and lookup the resulting cecksum
