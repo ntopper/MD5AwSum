@@ -10,6 +10,7 @@ using namespace std;
 #define HELP 4
 #define CHECKSUM 5
 #define DOWNLOAD 6
+#define SOURCES 7
 
 class inputParser{
 	public:
@@ -48,6 +49,11 @@ class inputParser{
 				if(argc != 3) return HELP;
 				return DOWNLOAD;
 			}
+
+			else if(!strcmp(argv[1], "--sources") || !strcmp(argv[1], "-s")) {
+				if(argc != 2) return HELP;
+				return SOURCES;
+			}
 			
 			//two arguments and no flags, the given argument must be a filepath
 			else if (argc == 2){
@@ -76,6 +82,7 @@ class inputParser{
 			cout << "\t-l, --lookup\t\tlookup the given hash" << endl;
 			cout << "\t-a, --add\t\tadd the given url to the local table" << endl;
 			cout << "\t-r, --remove\t\tremove the given url from the local table" << endl;
+			cout << "\t-s, --sources\t\tshow repositories that are locally stored" << endl;
 			cout << "\t-d, --download\t\tdownload the given url and lookup" << endl;
 			cout << "\t-u, --update\t\tupdate the local table, updates\n\t\t\t\tall urls if it is not specified" << endl;
 		}
