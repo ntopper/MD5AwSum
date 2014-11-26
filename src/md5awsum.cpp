@@ -7,13 +7,15 @@
 #include <string>
 #include <stdio.h>
 
+#define LOCALREPO "local"
+
 using namespace std;
 
 void md5awsum::lookup(string inString, bool isFile){
 	string hash;
 	if (isFile) {
 		try {
-			Md5Hash fHash = Md5Hash(inString);
+			Md5Hash fHash(inString);
         	hash =  fHash.getChecksum();
         	cout << "checksum: " << hash << endl;
 		} catch (int e){
@@ -82,6 +84,28 @@ void md5awsum::addFromFile(string filename) {
 		add(url);
 	}
 	f.close();
+}
+
+void md5awsum::addEntry(string filename) {
+	try{
+		Md5Hash h(filename);
+		string hash = h.getChecksum();
+
+		cout << "THE ENTRY WILL BE ADDED!! from file" << endl;
+
+		//Need to add filename and hash to rainbow table with repo=LOCALREPO
+		//needs to check if repo LOCALREPO exists first
+	} catch(exception e) {
+		cerr << "Error reading from file." << endl;
+		return;
+	}
+}
+
+void md5awsum::addEntry(string name, string hash) {
+	//add filename and hash to rainbow table with repo=LOCALREPO
+	//needs to check if repo LOCALREPO exists first
+	//should be same process as above without having to hash
+	cout << "THE ENTRY WILL BE ADDED!! from name and hash" << endl;
 }
 
 void md5awsum::update(string url){

@@ -16,6 +16,7 @@ using namespace std;
 #define SOURCES 7
 #define QUIET 8
 #define ADDFROMFILE 9
+#define ENTRY 10
 
 class inputParser{
 	public:
@@ -76,6 +77,11 @@ class inputParser{
 			else if(!strcmp(input, "--add-from-file") || !strcmp(input, "-aff")) {
 				if(mainFlag != 0) mainFlag = HELP;
 				mainFlag = ADDFROMFILE;
+			}
+
+			else if(!strcmp(input, "--entry") || !strcmp(input, "-e")) {
+				if(mainFlag != 0) mainFlag = HELP;
+				mainFlag = ENTRY;
 			}
 			
 			//SUBFLAGS
@@ -154,6 +160,18 @@ class inputParser{
 						prog.addFromFile(argument_string);
 					}
 					break;
+
+				case ENTRY:
+					if(!params.size()) usage();
+					if((!subFlag.size() || subFlag.front() == QUIET) && params.size() == 1) {
+						argument_string = params.front();
+						prog.addEntry(argument_string);
+					} else {
+						argument_string = params[0];
+						string hash = params[1];
+						prog.addEntry(argument_string, hash);
+					}
+					break;
 					
 				case HELP:
 					usage();
@@ -171,7 +189,7 @@ class inputParser{
 		}
 
 		static void usage() {
-			cout << "Usage: MD5AwSum [options]" << endl;
+			cout << "Usage: MD5AwSum [options] <input>" << endl;
 			cout << "\nOptions: " << endl;
 			cout << "\t-h, --help\t\tshow this information" << endl;
 			cout << "\t-q, --quiet\t\tsupress output (default verbose)" << endl;
@@ -182,6 +200,8 @@ class inputParser{
 			cout << "\t-s, --sources\t\tshow repositories that are locally stored" << endl;
 			cout << "\t-d, --download\t\tdownload the given url and lookup" << endl;
 			cout << "\t-u, --update\t\tupdate the local table, updates\n\t\t\t\tall urls if it is not specified" << endl;
+			cout << "\t-aff, --add-from-file\treads a file where each line is a url\n\t\t\t\teach url is added to the table" << endl;
+			cout << "\t-e, --entry\t\twill read the file, hash and add to local\n\t\t\t\trepo or will take the given name and\n\t\t\t\thash and add it to the local repo" << endl;
 		}
 
 

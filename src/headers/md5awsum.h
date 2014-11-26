@@ -14,6 +14,8 @@ class md5awsum {
 		void searchTable(string);
 		void download(string);
 		void addFromFile(string);
+		void addEntry(string);
+		void addEntry(string,string);
 };
 
 #endif
