@@ -1,4 +1,4 @@
-CC=g++
+CC=g++-4.8
 CFLAGS=-Wall -std=c++11 -c
 BUILDDIR=build/
 SRC=src/
@@ -57,12 +57,20 @@ md5libtest: build tempfiles $(SRC)md5libtest.cpp $(HEAD)md5lib.h
 	@printf 'building md5libtest...\t\t'
 	@$(CC) $(CFLAGS) $(SRC)md5libtest.cpp -o $(BUILDDIR)md5libtest.o
 	@echo 'complete.'
+	@printf 'building testmd5 executable...\t'
+	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)md5libtest.o -o testmd5
+	@echo 'complete.'
 
 tempfiles:
 	@printf 'building testfiles...\t\t'
 	@echo 'this is a test file!!!' > /tmp/.testfile
 	@perl -e 'for (my $$i=0; $$i <= 1000000; $$i++) { print "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\n"; }' > /tmp/.testfile
 	@printf '' > /tmp/.emptyfile
+	@echo 'complete.'
+
+install:
+	@printf 'installing MD5AwSum in /usr/bin... '
+	@mv MD5AwSum /usr/bin
 	@echo 'complete.'
 
 clean:

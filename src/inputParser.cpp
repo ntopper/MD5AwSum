@@ -9,6 +9,7 @@ using namespace std;
 #define UPDATE 3
 #define HELP 4
 #define CHECKSUM 5
+#define DOWNLOAD 6
 
 class inputParser{
 	public:
@@ -31,16 +32,22 @@ class inputParser{
 			} 
 			
 			//remove flag, return REMOVE if 3 arguments given
-			else if(!strcmp(argv[1], "--remove") || !strcmp(argv[1], "-r")){
+			else if(!strcmp(argv[1], "--remove") || !strcmp(argv[1], "-r")) {
 				if(argc != 3) return HELP;
 				return REMOVE;
 			} 
 			
 			//update flag, return UPDATE if less than 4 arguments given
-			else if(!strcmp(argv[1], "--update") || !strcmp(argv[1], "-u")){
+			else if(!strcmp(argv[1], "--update") || !strcmp(argv[1], "-u")) {
 				if(argc > 3) return HELP;
 				return UPDATE;
-			} 
+			}
+
+			//download flag, return DOWNLOAD if 3 arguments are given
+			else if(!strcmp(argv[1], "--download") || !strcmp(argv[1], "-d")) {
+				if(argc != 3) return HELP;
+				return DOWNLOAD;
+			}
 			
 			//two arguments and no flags, the given argument must be a filepath
 			else if (argc == 2){
@@ -51,22 +58,26 @@ class inputParser{
 			else return HELP;
 		}
 
-		static void usage() {
+		static void head() {
 			cout << " __  __ ____  ____    _            ____                  " << endl;
 			cout << "|  \\/  |  _ \\| ___|  / \\__      __/ ___| _   _ _ __ ___  " << endl;
 			cout << "| |\\/| | | | |___ \\ / _ \\ \\ /\\ / /\\___ \\| | | | '_ ` _ \\ " << endl;
 			cout << "| |  | | |_| |___) / ___ \\ V  V /  ___) | |_| | | | | | |" << endl;
 			cout << "|_|  |_|____/|____/_/   \\_\\_/\\_/  |____/ \\__,_|_| |_| |_|" << endl;
 			cout << endl;
+		}
+
+		static void usage() {
 			cout << "Usage: MD5AwSum [options]" << endl;
 			cout << "\nOptions: " << endl;
 			cout << "\t-h, --help\t\tshow this information" << endl;
-			cout << "\t-v, --verbose\t\tverbose output (default quiet)" << endl;
+			cout << "\t-q, --quiet\t\tsupress output (default verbose)" << endl;
 			//modify the following to be correct and more helpful
-			cout << "\t-l, --lookup\t\tlookup text" << endl;
-			cout << "\t-a, --add\t\tadd text" << endl;
-			cout << "\t-r, --remove\t\tremove text" << endl;
-			cout << "\t-u, --update\t\tupdate text" << endl;
+			cout << "\t-l, --lookup\t\tlookup the given hash" << endl;
+			cout << "\t-a, --add\t\tadd the given url to the local table" << endl;
+			cout << "\t-r, --remove\t\tremove the given url from the local table" << endl;
+			cout << "\t-d, --download\t\tdownload the given url and lookup" << endl;
+			cout << "\t-u, --update\t\tupdate the local table, updates\n\t\t\t\tall urls if it is not specified" << endl;
 		}
 };
 

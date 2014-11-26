@@ -5,7 +5,8 @@
 #include <unistd.h>
 #include <time.h>
 
-#define PATH1 "/tmp/.testfile"
+#define PATH4 "/tmp/.testfile"
+#define PATH1 "/home/mark/Downloads/distros/linuxmint-16-xfce-dvd-32bit.iso"
 #define PATH2 "/tmp/.emptyfile"
 #define PATH3 "/tmp/.THISISATEMPORARYFILE"
 

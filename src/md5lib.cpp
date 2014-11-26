@@ -12,6 +12,7 @@
 #define HASHERROR 1
 #define HASHSIZE 33
 #define MESSAGESIZE 64
+#define MINSIZE 1000
 
 
 using namespace std;
@@ -22,13 +23,11 @@ string md5lib::hash(string file_path) throw(int) {
 	FILE *hashofpath = popen(t.c_str(), "r");
 	if (!hashofpath) throw HASHERROR;
 
-	char buffer[1024];
+	char buffer[200];
 	char *inp = fgets(buffer, HASHSIZE, hashofpath);
 	pclose(hashofpath);
 
 	return inp;
-
-	//return md5lib(file_path).get();
 }
 
 md5lib::md5lib(string path) {
@@ -39,24 +38,25 @@ md5lib::md5lib(string path) {
 	try {
 		streampos start, end;
 		ifstream f(this->file_path, ios::binary);
+		if(f.fail()) throw exception();
 		start = f.tellg();
 		f.seekg(0,ios::end);
 		end = f.tellg();
 		this->size = (end-start);
 		f.close();
+
+		//determine what breaks should be for progress bar
+		if(!(this->size) || this->size < MINSIZE) this->sizebreak = 1;
+		else this->sizebreak = this->size/100;
+
+		//begin hash progress
+		this->initialize();
+		this->process();
+		this->finalize();
 	} catch(exception e) {
 		cerr << "[Error] Could not determine file size" << endl;
 		return;
 	}
-
-	//determine what breaks should be for progress bar
-	if(!(this->size) || this->size < 100) this->sizebreak = 1;
-	else this->sizebreak = this->size/100;
-
-	//begin hash progress
-	this->initialize();
-	this->process();
-	this->finalize();
 }
 
 string md5lib::get() {
@@ -83,6 +83,8 @@ void md5lib::process() {
 		uint64_t length = 0;
 		bool alive = true;
 		char buff[MESSAGESIZE+1];
+
+		int progcount = 0;
 
 		while(alive) {
 			//clean buffer and read 512 bits
@@ -130,10 +132,14 @@ void md5lib::process() {
 				this->digest((uint32_t *)buff);
 				length += 64;
 			}
-			if(!(length%this->sizebreak)) this->progress(length);
+
+			if(length >= progcount*this->sizebreak) {
+				this->progress(length);
+				progcount++;
+			}
 		}
 		inpreader.close();
-		if(this->size >= 100) cout << endl;
+		if(this->size >= MINSIZE) cout << endl;
 	} catch (exception e) {
 		cerr << "[Error] Could not read file" << endl;
 		return;
@@ -216,13 +222,14 @@ void md5lib::hexdump(uint8_t* buff, uint64_t size) {
 }
 
 void md5lib::progress(uint64_t prog) {
+	if(!(this->size) || this->size < MINSIZE) return;
+
 	//get terminal columns
 	struct winsize w;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	uint8_t c = (3*w.ws_col/4)-2;
 
 	//check progress
-	if(!(this->size) || this->size < 100) return;
 	float pos = (float)prog/(float)(this->size);
 
 	//create bar
@@ -231,6 +238,6 @@ void md5lib::progress(uint64_t prog) {
 		if(i < pos*c) cout << "=";
 		else cout << " ";
 	}
-	cout << "]" << int(pos*100 + 1) << "%\r";
+	cout << "]" << int(pos*100) << "%\r";
 	cout.flush();
 }
