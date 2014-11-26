@@ -5,6 +5,7 @@
 #include "inputParser.cpp"
 #include <iostream>
 #include <string>
+#include <stdio.h>
 
 #define LOOKUP 0 
 #define ADD 1
@@ -12,6 +13,7 @@
 #define UPDATE 3
 #define HELP 4
 #define CHECKSUM 5
+#define DOWNLOAD 6
 
 using namespace std;
 
@@ -50,10 +52,13 @@ int main (int argc, char* argv[]) {
 				prog.update(argument_string);
 			}
 			break;
-
 		
+		case DOWNLOAD:
+			argument_string = argv[2];
+			prog.download(argument_string);
+			break;
+
 		case CHECKSUM://hash file at a given filepath and lookup the resulting cecksum
-			
 			argument_string = argv[1];
 			prog.lookup(argument_string, true);
 			break;
@@ -103,11 +108,35 @@ void md5awsum::remove(string url){
 	repoMan.remove(url);
 }
 
+void md5awsum::download(string url){
+	cout << "Download from -> " << url << endl;
+
+	//download file
+	string wget = "wget --content-disposition -nv " + url + " 2>&1";
+	FILE *wgetOutput = popen(wget.c_str(), "r");
+	if(!wgetOutput) throw "wget fail";
+
+	//read in output
+	char buff[256];
+	fgets(buff, 255, wgetOutput);
+	pclose(wgetOutput);
+
+	//find filename
+	string filename = string(buff);
+	size_t found = filename.find("-> \"");
+	filename.erase(0,found+4);
+	found = filename.find("\" ");
+	filename.erase(found);
+
+	//pass to lookup
+	cout << "Download complete -> " << filename << endl;
+	lookup(filename, true);
+}
+
 void md5awsum::update(string url){
 	RepositoryManager repoMan;
 	repoMan.update(url);
 }
-
 
 void md5awsum::update() {
 	RepositoryManager repoMan;

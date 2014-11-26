@@ -9,6 +9,7 @@ using namespace std;
 #define UPDATE 3
 #define HELP 4
 #define CHECKSUM 5
+#define DOWNLOAD 6
 
 class inputParser{
 	public:
@@ -31,16 +32,22 @@ class inputParser{
 			} 
 			
 			//remove flag, return REMOVE if 3 arguments given
-			else if(!strcmp(argv[1], "--remove") || !strcmp(argv[1], "-r")){
+			else if(!strcmp(argv[1], "--remove") || !strcmp(argv[1], "-r")) {
 				if(argc != 3) return HELP;
 				return REMOVE;
 			} 
 			
 			//update flag, return UPDATE if less than 4 arguments given
-			else if(!strcmp(argv[1], "--update") || !strcmp(argv[1], "-u")){
+			else if(!strcmp(argv[1], "--update") || !strcmp(argv[1], "-u")) {
 				if(argc > 3) return HELP;
 				return UPDATE;
-			} 
+			}
+
+			//download flag, return DOWNLOAD if 3 arguments are given
+			else if(!strcmp(argv[1], "--download") || !strcmp(argv[1], "-d")) {
+				if(argc != 3) return HELP;
+				return DOWNLOAD;
+			}
 			
 			//two arguments and no flags, the given argument must be a filepath
 			else if (argc == 2){

@@ -23,7 +23,7 @@ string md5lib::hash(string file_path) throw(int) {
 	FILE *hashofpath = popen(t.c_str(), "r");
 	if (!hashofpath) throw HASHERROR;
 
-	char buffer[1024];
+	char buffer[200];
 	char *inp = fgets(buffer, HASHSIZE, hashofpath);
 	pclose(hashofpath);
 
