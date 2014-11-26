@@ -1,5 +1,8 @@
+#include "headers/md5awsum.h"
 #include <iostream>
 #include <cstring>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -11,57 +14,124 @@ using namespace std;
 #define CHECKSUM 5
 #define DOWNLOAD 6
 #define SOURCES 7
+#define QUIET 8
 
 class inputParser{
 	public:
-		static int parseInput(int argc, char* argv[]){
+		int mainFlag = 0;
+		vector<int> subFlag;
+		vector<string> params;
+		md5awsum prog;
 
-			//not enough arguments, return help
-			if(argc < 2) return HELP;
-		
+		inputParser(int argc, char* argv[], md5awsum p) {
+			prog = p;
+			if(argc < 2) mainFlag = HELP;
+			else if(argc == 2) mainFlag = CHECKSUM;
+			for(int i = 1; i < argc; i++) {
+				parseInput(argv[i]);
+			}
+		}
+
+		void parseInput(char *input){
+
+			//MAINFLAGS
 			//lookup flag, return LOOKUP if 3 arguments given
-			if(!strcmp(argv[1], "--lookup") || !strcmp(argv[1], "-l")) {
-				if(argc != 3) return HELP;			
-				return LOOKUP;
+			if(!strcmp(input, "--lookup") || !strcmp(input, "-l")) {
+				if(mainFlag != 0) mainFlag = HELP;			
+				mainFlag = LOOKUP;
 			} 
 			
 			//add flag, return ADD if 3 arguments given
-			else if(!strcmp(argv[1], "--add") || !strcmp(argv[1], "-a")) {
-				
-				if(argc != 3) return HELP;			
-				return ADD;
+			else if(!strcmp(input, "--add") || !strcmp(input, "-a")) {
+				if(mainFlag != 0) mainFlag = HELP;				
+				mainFlag = ADD;
 			} 
 			
 			//remove flag, return REMOVE if 3 arguments given
-			else if(!strcmp(argv[1], "--remove") || !strcmp(argv[1], "-r")) {
-				if(argc != 3) return HELP;
-				return REMOVE;
+			else if(!strcmp(input, "--remove") || !strcmp(input, "-r")) {
+				if(mainFlag != 0) mainFlag = HELP;	
+				mainFlag = REMOVE;
 			} 
 			
 			//update flag, return UPDATE if less than 4 arguments given
-			else if(!strcmp(argv[1], "--update") || !strcmp(argv[1], "-u")) {
-				if(argc > 3) return HELP;
-				return UPDATE;
+			else if(!strcmp(input, "--update") || !strcmp(input, "-u")) {
+				if(mainFlag != 0) mainFlag = HELP;	
+				mainFlag = UPDATE;
 			}
 
 			//download flag, return DOWNLOAD if 3 arguments are given
-			else if(!strcmp(argv[1], "--download") || !strcmp(argv[1], "-d")) {
-				if(argc != 3) return HELP;
-				return DOWNLOAD;
+			else if(!strcmp(input, "--download") || !strcmp(input, "-d")) {
+				if(mainFlag != 0) mainFlag = HELP;	
+				mainFlag = DOWNLOAD;
 			}
 
-			else if(!strcmp(argv[1], "--sources") || !strcmp(argv[1], "-s")) {
-				if(argc != 2) return HELP;
-				return SOURCES;
+			//sources flag, returns SOURCES
+			else if(!strcmp(input, "--sources") || !strcmp(input, "-s")) {
+				if(mainFlag != 0) mainFlag = HELP;	
+				mainFlag = SOURCES;
 			}
 			
-			//two arguments and no flags, the given argument must be a filepath
-			else if (argc == 2){
-				return CHECKSUM;
-			} 
-			
-			//default instruction to print usage
-			else return HELP;
+			//SUBFLAGS
+			//quiet flag, adds to subFlag
+			else if(!strcmp(input, "--quiet") || !strcmp(input, "-q")) {
+				subFlag.push_back(QUIET);
+			}
+
+			//PARAMETERS
+			else params.push_back(input);
+		}
+
+		void analyze() {
+			string argument_string;
+
+			head();
+
+			switch(mainFlag) {
+				case LOOKUP: //reverse lookup from given hash string
+					argument_string = params.front();
+					prog.lookup(argument_string, false);
+					break;
+					
+				case ADD: //add a repository given a url
+					argument_string = params.front();
+					prog.add(argument_string);
+					break;
+					
+				case REMOVE: //remove a repository given a url
+					argument_string = params.front();
+					prog.remove(argument_string);
+					break;
+					
+				case UPDATE: //update one (given a url) or all of the stored repositories
+					//if no url argument is given, update all
+					if (!params.size()) { prog.update(); }
+					
+					//otherwize update the given URL
+					else {
+						argument_string = params.front();
+						prog.update(argument_string);
+					}
+					break;
+				
+				case DOWNLOAD:
+					argument_string = params.front();
+					prog.download(argument_string);
+					break;
+
+				case CHECKSUM://hash file at a given filepath and lookup the resulting cecksum
+					argument_string = params.front();
+					prog.lookup(argument_string, true);
+					break;
+
+				case SOURCES: //search for all entires labeld as "repository"
+					argument_string = "repository";
+					prog.lookup(argument_string, false);
+					break;
+					
+				case HELP:
+					usage();
+					break;
+			}
 		}
 
 		static void head() {
@@ -86,6 +156,8 @@ class inputParser{
 			cout << "\t-d, --download\t\tdownload the given url and lookup" << endl;
 			cout << "\t-u, --update\t\tupdate the local table, updates\n\t\t\t\tall urls if it is not specified" << endl;
 		}
+
+
 };
 
 

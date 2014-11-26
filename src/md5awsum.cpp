@@ -7,77 +7,7 @@
 #include <string>
 #include <stdio.h>
 
-#define LOOKUP 0 
-#define ADD 1
-#define REMOVE 2
-#define UPDATE 3
-#define HELP 4
-#define CHECKSUM 5
-#define DOWNLOAD 6
-#define SOURCES 7
-
 using namespace std;
-
-
-int main (int argc, char* argv[]) {
-	md5awsum prog;
-	string argument_string;
-
-	inputParser::head();
-	
-	//return value of parseInput determines what the user would like to do
-	int choice = inputParser::parseInput(argc, argv);
-	
-	switch(choice) {
-		case LOOKUP: //reverse lookup from given hash string
-			argument_string = argv[2];
-			prog.lookup(argument_string, false);
-			break;
-			
-		case ADD: //add a repository given a url
-			argument_string = argv[2];
-			prog.add(argument_string);
-			break;
-			
-		case REMOVE: //remove a repository given a url
-			argument_string = argv[2];
-			prog.remove(argument_string);
-			break;
-			
-		case UPDATE: //update one (given a url) or all of the stored repositories
-
-			//if no url argument is given, update all
-			if (argc == 2) {prog.update();}
-			
-			//otherwize update the given URL
-			else {
-				argument_string = argv[2];
-				prog.update(argument_string);
-			}
-			break;
-		
-		case DOWNLOAD:
-			argument_string = argv[2];
-			prog.download(argument_string);
-			break;
-
-		case CHECKSUM://hash file at a given filepath and lookup the resulting cecksum
-			argument_string = argv[1];
-			prog.lookup(argument_string, true);
-			break;
-
-		case SOURCES: //search for all entires labeld as "repository"
-			argument_string = "repository";
-			prog.lookup(argument_string, false);
-			break;
-			
-		case HELP:
-			inputParser::usage();
-			break;
-
-	}
-	return 0;
-}
 
 void md5awsum::lookup(string inString, bool isFile){
 	string hash;
