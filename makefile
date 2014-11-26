@@ -1,4 +1,4 @@
-CC=g++
+CC=g++-4.8
 CFLAGS=-Wall -std=c++11 -c
 BUILDDIR=build/
 SRC=src/
@@ -66,6 +66,11 @@ tempfiles:
 	@echo 'this is a test file!!!' > /tmp/.testfile
 	@perl -e 'for (my $$i=0; $$i <= 1000000; $$i++) { print "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\n"; }' > /tmp/.testfile
 	@printf '' > /tmp/.emptyfile
+	@echo 'complete.'
+
+install:
+	@printf 'installing MD5AwSum in /usr/bin... '
+	@mv MD5AwSum /usr/bin
 	@echo 'complete.'
 
 clean:
