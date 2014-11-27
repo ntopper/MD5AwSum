@@ -73,3 +73,10 @@ void RepositoryManager::print() {
 	string url = "repository";
 	this->master.search(url);
 }
+
+void RepositoryManager::addEntry(string name, string hash) {
+	Md5Hash getKey("local",true);
+	string key = getKey.getChecksum();
+
+	this->master.add_entry(name,hash,key);
+}

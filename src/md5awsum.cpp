@@ -7,7 +7,6 @@
 #include <string>
 #include <stdio.h>
 
-#define LOCALREPO "local"
 
 using namespace std;
 
@@ -91,10 +90,8 @@ void md5awsum::addEntry(string filename) {
 		Md5Hash h(filename);
 		string hash = h.getChecksum();
 
-		cout << "THE ENTRY WILL BE ADDED!! from file" << endl;
-
-		//Need to add filename and hash to rainbow table with repo=LOCALREPO
-		//needs to check if repo LOCALREPO exists first
+		RepositoryManager repoMan;
+		repoMan.addEntry(filename, hash);
 	} catch(exception e) {
 		cerr << "Error reading from file." << endl;
 		return;
@@ -102,10 +99,8 @@ void md5awsum::addEntry(string filename) {
 }
 
 void md5awsum::addEntry(string name, string hash) {
-	//add filename and hash to rainbow table with repo=LOCALREPO
-	//needs to check if repo LOCALREPO exists first
-	//should be same process as above without having to hash
-	cout << "THE ENTRY WILL BE ADDED!! from name and hash" << endl;
+	RepositoryManager repoMan;
+	repoMan.addEntry(name,hash);
 }
 
 void md5awsum::update(string url){

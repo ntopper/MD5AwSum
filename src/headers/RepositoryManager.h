@@ -15,7 +15,7 @@ class RepositoryManager {
 		void update(string url);
 		void update();
 		void print();
-
+		void addEntry(string,string);
 	private:
 		
 };

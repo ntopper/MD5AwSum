@@ -19,6 +19,7 @@ class RainbowTable {
 		void add(string &file_path, string &key) throw(int);
 		void remove(string &key);
 		void update_all();
+		void add_entry(string,string,string);
 		void write();
 		void add_url(string &url, string &key) throw(int);
 		bool find_repo(string url);
