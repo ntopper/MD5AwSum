@@ -3,6 +3,8 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <dirent.h>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -17,6 +19,7 @@ using namespace std;
 #define QUIET 8
 #define ADDFROMFILE 9
 #define ENTRY 10
+#define GENERATE 11
 
 class inputParser{
 	public:
@@ -82,6 +85,11 @@ class inputParser{
 			else if(!strcmp(input, "--entry") || !strcmp(input, "-e")) {
 				if(mainFlag != 0) mainFlag = HELP;
 				mainFlag = ENTRY;
+			}
+
+			else if(!strcmp(input, "--generate") || !strcmp(input, "-g")) {
+				if(mainFlag != 0) mainFlag = HELP;
+				mainFlag = GENERATE;
 			}
 			
 			//SUBFLAGS
@@ -173,10 +181,52 @@ class inputParser{
 					}
 					break;
 					
+				case GENERATE: {
+					//determine directory
+					if(!params.size()) {
+						argument_string = "./"; //current dir
+					} else {
+						argument_string = params.front();
+					}
+
+					//variables
+					vector<string> files;
+					getDir(argument_string, files);
+
+					//pass to add entry
+					printf("Found %d files!\n",(int)files.size());
+					for(unsigned int i = 0; i < files.size(); i++) {
+						cout << "-> " << files[i] << endl;
+						prog.addEntry(files[i]);
+					}
+					break;
+				}
+
 				case HELP:
 					usage();
 					break;
 			}
+		}
+
+		static void getDir(string directory, vector<string> &files) {
+			DIR *d;
+			struct dirent *df;
+			struct stat ds;
+
+			if((d = opendir(directory.c_str())) != NULL) {
+				while((df = readdir(d)) != NULL) {
+					//ignore directories
+					if(df->d_name[0] == '.') continue;
+					if(directory.back() != '/') directory += "/";
+					stat((directory + string(df->d_name)).c_str(), &ds);
+					if(S_ISDIR(ds.st_mode)) continue;
+
+					//push to files
+					files.push_back(directory + string(df->d_name));
+				}
+			}
+
+			closedir(d);
 		}
 
 		static void head() {
@@ -192,7 +242,7 @@ class inputParser{
 			cout << "Usage: MD5AwSum [options] <input>" << endl;
 			cout << "\nOptions: " << endl;
 			cout << "\t-h, --help\t\tshow this information" << endl;
-			cout << "\t-q, --quiet\t\tsupress output (default verbose)" << endl;
+			//cout << "\t-q, --quiet\t\tsupress output (default verbose)" << endl;
 			//modify the following to be correct and more helpful
 			cout << "\t-l, --lookup\t\tlookup the given hash" << endl;
 			cout << "\t-a, --add\t\tadd the given url to the local table" << endl;
@@ -202,6 +252,7 @@ class inputParser{
 			cout << "\t-u, --update\t\tupdate the local table, updates\n\t\t\t\tall urls if it is not specified" << endl;
 			cout << "\t-aff, --add-from-file\treads a file where each line is a url\n\t\t\t\teach url is added to the table" << endl;
 			cout << "\t-e, --entry\t\twill read the file, hash and add to local\n\t\t\t\trepo or will take the given name and\n\t\t\t\thash and add it to the local repo" << endl;
+			cout << "\t-g, --generate\t\tgiven a directory will hash and store\n\t\t\t\tall files in that directory, defaults\n\t\t\t\tto current directory if not given." << endl;
 		}
 
 
