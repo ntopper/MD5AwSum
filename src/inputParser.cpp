@@ -91,6 +91,10 @@ class inputParser{
 				if(mainFlag != 0) mainFlag = HELP;
 				mainFlag = GENERATE;
 			}
+
+			else if(!strcmp(input, "--help") || !strcmp(input, "-h")) {
+				mainFlag = HELP;
+			}
 			
 			//SUBFLAGS
 			//quiet flag, adds to subFlag
@@ -151,8 +155,12 @@ class inputParser{
 					}
 					break;
 
-				case CHECKSUM://hash file at a given filepath and lookup the resulting cecksum
+				case CHECKSUM://hash file at a given filepath and lookup the resulting checksum
 					argument_string = params.front();
+					if(checkDir(argument_string)) {
+						cerr << "Error cannot hash directory." << endl;
+						break;
+					}
 					prog.lookup(argument_string, true);
 					break;
 
@@ -227,6 +235,13 @@ class inputParser{
 			}
 
 			closedir(d);
+		}
+
+		static bool checkDir(string filename) {
+			DIR *d;
+
+			if((d = opendir(filename.c_str())) != NULL) return true;
+			else return false;
 		}
 
 		static void head() {
