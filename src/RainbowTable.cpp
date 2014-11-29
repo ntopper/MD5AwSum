@@ -54,7 +54,7 @@ void RainbowTable::search(string &hash) {
         const char * entry_hash = entry.attribute("hash").value();
 
         //is this a match?
-        if(strcmp(entry_hash, hash.c_str()) == 0) {
+        if(strstr(entry_hash, hash.c_str()) != 0) {
             RainbowTable::print_entry(entry);
         }
     }
