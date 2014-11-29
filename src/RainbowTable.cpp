@@ -37,7 +37,9 @@ void RainbowTable::parse() throw(int) {
 
     const char * c = this->file_path.c_str();
     if(!this->tree.load_file(c)) {
-        throw(ERROR_READING_FILE);
+
+    	throw(ERROR_READING_FILE);
+    	return;
     }
 }
 
@@ -125,6 +127,12 @@ void RainbowTable::add(string &file_path, string &key) throw(int) {
         throw(ERROR_READING_FILE);
         return;
     }
+    
+    //a valid table will have a first child called "RainbowTable"
+    if(strcmp(new_doc.first_child().name(), "RainbowTable") != 0){
+		throw(ERROR_READING_FILE);
+		return;
+	}
 
     pugi::xml_node new_root = new_doc.child("RainbowTable");
     pugi::xml_node old_root = this->tree.child("RainbowTable");
@@ -161,8 +169,15 @@ void RainbowTable::add_url(string &url, string &key) throw(int) {
 	system(wget_command.c_str());
 	
 	//attempt to parse and add to repo
-	this->add(temp_file, key);
-	
+	try {
+		this->add(temp_file, key);
+	}
+	catch (int e) {
+		//failure, remove the temp file and return
+		cout << "Error Parsing remote repository: " << url << endl; 
+		system(rm.c_str());
+		return;
+	}
     //add the repository sourse as an entry
     pugi::xml_node root = this->tree.child("RainbowTable");
     pugi::xml_node entry = root.append_child();

@@ -50,7 +50,7 @@ void RepositoryManager::update(string url) {
 	//do not update if repo does not exist
 	if (!this->master.find_repo(url)) {
         cout << "This repository has not been added!" << endl;
-        cout << "try -a <repository url> to update" << endl; 
+        cout << "try -a <repository url> to add" << endl; 
         return;
     }
 
