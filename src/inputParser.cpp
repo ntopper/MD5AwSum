@@ -179,7 +179,7 @@ class inputParser{
 
 				case ENTRY:
 					if(!params.size()) usage();
-					if((!subFlag.size() || subFlag.front() == QUIET) && params.size() == 1) {
+					else if((!subFlag.size() || subFlag.front() == QUIET) && params.size() == 1) {
 						argument_string = params.front();
 						prog.addEntry(argument_string);
 					} else {
