@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <stdio.h>
+#include <libgen.h>
 
 
 using namespace std;
@@ -46,6 +47,7 @@ void md5awsum::add(string url){
 void md5awsum::remove(string url){
 	RepositoryManager repoMan;
 	repoMan.remove(url);
+	cout << "Removed " << url << " from local table." << endl;
 }
 
 void md5awsum::download(string url){
@@ -90,8 +92,10 @@ void md5awsum::addEntry(string filename) {
 		Md5Hash h(filename);
 		string hash = h.getChecksum();
 
+		string file = string(basename(&filename[0]));
+
 		RepositoryManager repoMan;
-		repoMan.addEntry(filename, hash);
+		repoMan.addEntry(file, hash);
 	} catch(exception e) {
 		cerr << "Error reading from file." << endl;
 		return;
