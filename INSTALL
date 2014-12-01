@@ -11,16 +11,5 @@ Installation Instructions for MD5Awsum:
 
 1. To compile MD5AwSum, simply type in "make".
 2. An executable will be created in the directory.
-3. Type "make clean" to delete the build files as well as the executable.
-
-Specialized Instructions:
-
-	Upon modification of a specific part of the project, one can recompile only
-the necessary part of the project using "make <partname>" and then "make MD5AwSum".
-
-For example:
-	I create the project using "make". I modify a function in "md5lib.cpp". I then
-issue the command "make md5lib" followed by "make MD5AwSum" and the project will
-be recompiled without having to recompile every single file.
-
-NOTE: always "make clean" BEFORE using "git add ." or pushing to the repository!!!
+3. Type "make install" to install the executable on the system.
+   (Requires root permissions)
