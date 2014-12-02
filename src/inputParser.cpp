@@ -23,7 +23,7 @@ using namespace std;
 
 class inputParser{
 	public:
-		int mainFlag = 0;
+		int mainFlag = -1;
 		vector<int> subFlag;
 		vector<string> params;
 		md5awsum prog;
@@ -42,53 +42,53 @@ class inputParser{
 			//MAINFLAGS
 			//lookup flag, return LOOKUP if 3 arguments given
 			if(!strcmp(input, "--lookup") || !strcmp(input, "-l")) {
-				if(mainFlag != 0) mainFlag = HELP;			
+				if(mainFlag != -1) mainFlag = HELP;			
 				mainFlag = LOOKUP;
 			} 
 			
 			//add flag, return ADD if 3 arguments given
 			else if(!strcmp(input, "--add") || !strcmp(input, "-a")) {
-				if(mainFlag != 0) mainFlag = HELP;				
+				if(mainFlag != -1) mainFlag = HELP;				
 				mainFlag = ADD;
 			} 
 			
 			//remove flag, return REMOVE if 3 arguments given
 			else if(!strcmp(input, "--remove") || !strcmp(input, "-r")) {
-				if(mainFlag != 0) mainFlag = HELP;	
+				if(mainFlag != -1) mainFlag = HELP;	
 				mainFlag = REMOVE;
 			} 
 			
 			//update flag, return UPDATE if less than 4 arguments given
 			else if(!strcmp(input, "--update") || !strcmp(input, "-u")) {
-				if(mainFlag != 0) mainFlag = HELP;	
+				if(mainFlag != -1) mainFlag = HELP;	
 				mainFlag = UPDATE;
 			}
 
 			//download flag, return DOWNLOAD if 3 arguments are given
 			else if(!strcmp(input, "--download") || !strcmp(input, "-d")) {
-				if(mainFlag != 0) mainFlag = HELP;	
+				if(mainFlag != -1) mainFlag = HELP;	
 				mainFlag = DOWNLOAD;
 			}
 
 			//sources flag, returns SOURCES
 			else if(!strcmp(input, "--sources") || !strcmp(input, "-s")) {
-				if(mainFlag != 0) mainFlag = HELP;	
+				if(mainFlag != -1) mainFlag = HELP;	
 				mainFlag = SOURCES;
 			}
 
 			//addfromfile flag, returns ADDFROMFILE
 			else if(!strcmp(input, "--add-from-file") || !strcmp(input, "-aff")) {
-				if(mainFlag != 0) mainFlag = HELP;
+				if(mainFlag != -1) mainFlag = HELP;
 				mainFlag = ADDFROMFILE;
 			}
 
 			else if(!strcmp(input, "--entry") || !strcmp(input, "-e")) {
-				if(mainFlag != 0) mainFlag = HELP;
+				if(mainFlag != -1) mainFlag = HELP;
 				mainFlag = ENTRY;
 			}
 
 			else if(!strcmp(input, "--generate") || !strcmp(input, "-g")) {
-				if(mainFlag != 0) mainFlag = HELP;
+				if(mainFlag != -1) mainFlag = HELP;
 				mainFlag = GENERATE;
 			}
 
@@ -110,6 +110,14 @@ class inputParser{
 			string argument_string;
 
 			head();
+
+			for(unsigned int i = 0; i < subFlag.size(); i++) {
+				switch(subFlag[i]) {
+					case QUIET:
+						cout << "[ERROR] This needs to handle quiet flag." << endl;
+						break;
+				}
+			}
 
 			switch(mainFlag) {
 				case LOOKUP: //reverse lookup from given hash string
@@ -156,12 +164,15 @@ class inputParser{
 					break;
 
 				case CHECKSUM://hash file at a given filepath and lookup the resulting checksum
-					argument_string = params.front();
-					if(checkDir(argument_string)) {
-						cerr << "Error cannot hash directory." << endl;
-						break;
+					if(!params.size()) usage();
+					else {
+						argument_string = params.front();
+						if(checkDir(argument_string)) {
+							cerr << "Error cannot hash directory." << endl;
+							break;
+						}
+						prog.lookup(argument_string, true);
 					}
-					prog.lookup(argument_string, true);
 					break;
 
 				case SOURCES: //search for all entires labeld as "repository"
@@ -211,6 +222,7 @@ class inputParser{
 				}
 
 				case HELP:
+				default:
 					usage();
 					break;
 			}
