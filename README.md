@@ -4,7 +4,8 @@ MD5AWSUM
 MD5 checksum with hash table lookup of commonlly downloaded files (IE distro ISO's)
 Verify your files wihthout opening a browser to look for the hash.
 
-=Usage=
+Usage
+===
 MD5AwSum [options] <input>
 Options: 
 	-h, --help		show this information
