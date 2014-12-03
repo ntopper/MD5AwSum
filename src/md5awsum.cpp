@@ -15,7 +15,7 @@ void md5awsum::lookup(string inString, bool isFile){
 	string hash;
 	if (isFile) {
 	
-		//check that the file exists
+		//make sure the file exists
 		ifstream infile(inString);
 		if(!infile.good()) {
 			cerr << inString << ": No such file or directory" << endl;
@@ -62,7 +62,7 @@ void md5awsum::download(string url){
 	cout << "Download from -> " << url << endl;
 
 	//download file
-	string wget = "wget --content-disposition -nv " + url + " 2>&1";
+	string wget = "wget -nv " + url + " 2>&1";
 	FILE *wgetOutput = popen(wget.c_str(), "r");
 	if(!wgetOutput) throw "wget fail";
 
