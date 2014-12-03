@@ -1,8 +1,7 @@
 MD5AWSUM
 ==================
 
-MD5 checksum with hash table lookup of commonlly downloaded files (IE distro ISO's)
-Verify your files wihthout opening a browser to look for the hash.
+MDAwSum is a one-stop tool for calculating md5checksums, verifying the integrity of downloaded files, and maintaining a reverse-lookup hashtabe of md5 hashes.
 
 Usage
 ------------------
