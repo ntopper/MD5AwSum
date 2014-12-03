@@ -26,7 +26,7 @@ void RepositoryManager::add(string url) {
 	//do not add redundently
 	if (this->master.find_repo(url)) {
         cout << "This repository has already been added!" << endl;
-        cout << "try -u <repository url> to add" << endl; 
+        cout << "try -u <repository url> to update" << endl; 
         return;
     }
 
