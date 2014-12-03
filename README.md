@@ -6,6 +6,7 @@ Verify your files wihthout opening a browser to look for the hash.
 
 Usage
 ------------------
+```
 MD5AwSum [options] <input>   
 Options:    
 	-h, --help		show this information   
@@ -24,4 +25,4 @@ Options:
 	-g, --generate		given a directory will hash and store
 				all files in that directory, defaults
 				to current directory if not given.
-
+```
