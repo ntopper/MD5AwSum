@@ -5,11 +5,11 @@ MD5 checksum with hash table lookup of commonlly downloaded files (IE distro ISO
 Verify your files wihthout opening a browser to look for the hash.
 
 Usage
-===
-MD5AwSum [options] <input>
-Options: 
-	-h, --help		show this information
-	-l, --lookup		lookup the given hash
+------------------
+MD5AwSum [options] <input>   
+Options:    
+	-h, --help		show this information   
+	-l, --lookup		lookup the given hash   
 	-a, --add		add the given url to the local table
 	-r, --remove		remove the given url from the local table
 	-s, --sources		show repositories that are locally stored
