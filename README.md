@@ -25,3 +25,22 @@ Options:
 				all files in that directory, defaults
 				to current directory if not given.
 ```
+
+Building and Installing
+----------------------
+
+MD5AwSum can be cloned from this repository:
+```
+git clone https://github.com/ntopper/MD5AwSum.git
+```
+
+To compile MD5AwSum, simply type in "make".   
+An executable will be created in the directory.   
+Type "make install" to install the executable on the system.
+    (Requires root permissions)
+
+```
+cd MD5AwSum
+make
+sudo make install
+```
