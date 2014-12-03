@@ -14,6 +14,14 @@ using namespace std;
 void md5awsum::lookup(string inString, bool isFile){
 	string hash;
 	if (isFile) {
+	
+		//check that the file exists
+		ifstream infile(inString);
+		if(!infile.good()) {
+			cerr << inString << ": No such file or directory" << endl;
+			return;
+		}
+		
 		try {
 			Md5Hash fHash(inString);
         	hash =  fHash.getChecksum();
