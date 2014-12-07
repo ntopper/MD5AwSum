@@ -1,7 +1,7 @@
 #include "headers/md5awsum.h"
 #include "headers/rainbow_table.h"
 #include "headers/md5hash.h"
-#include "headers/RepositoryManager.h"
+#include "headers/repository_manager.h"
 #include <iostream>
 #include <fstream>
 #include <string>
