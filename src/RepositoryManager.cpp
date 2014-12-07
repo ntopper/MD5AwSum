@@ -75,8 +75,10 @@ void RepositoryManager::print() {
 }
 
 void RepositoryManager::addEntry(string name, string hash) {
-	Md5Hash getKey("local",true);
-	string key = getKey.getChecksum();
-
+	//add an entry to the local repositry given a name and a hash. 
+	//key is created from entry name
+	Md5Hash getKey(name,true);
+	string key = getKey.getChecksum();	
 	this->master.add_entry(name,hash,key);
+	cout << hash << ": " << name << " added to local repository" << endl; 
 }
