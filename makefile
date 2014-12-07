@@ -5,7 +5,7 @@ SRC=src/
 HEAD=src/headers/
 TARGET=MD5AwSum
 
-all: build md5lib Md5Hash pugixml RainbowTable RepositoryManager input_parser md5awsum main $(TARGET)
+all: build md5lib md5hash pugixml RainbowTable RepositoryManager input_parser md5awsum main $(TARGET)
 
 $(TARGET): $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)input_parser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o
 	@printf 'building executable...\t\t'
@@ -24,9 +24,9 @@ md5lib: build $(SRC)md5lib.cpp $(HEAD)md5lib.h
 	@$(CC) $(CFLAGS) $(SRC)md5lib.cpp -o $(BUILDDIR)md5lib.o
 	@echo 'complete.'
 
-Md5Hash: build $(SRC)Md5Hash.cpp $(HEAD)Md5Hash.h $(HEAD)md5lib.h
-	@printf 'building Md5Hash...\t\t'
-	@$(CC) $(CFLAGS) $(SRC)Md5Hash.cpp -o $(BUILDDIR)Md5Hash.o
+md5hash: build $(SRC)md5hash.cpp $(HEAD)md5hash.h $(HEAD)md5lib.h
+	@printf 'building md5hash...\t\t'
+	@$(CC) $(CFLAGS) $(SRC)md5hash.cpp -o $(BUILDDIR)md5hash.o
 	@echo 'complete.'
 
 pugixml: build $(SRC)pugixml.cpp $(HEAD)pugixml.hpp
@@ -39,7 +39,7 @@ RainbowTable: build $(SRC)RainbowTable.cpp $(HEAD)RainbowTable.h $(HEAD)pugixml.
 	@$(CC) $(CFLAGS) $(SRC)RainbowTable.cpp -o $(BUILDDIR)RainbowTable.o
 	@echo 'complete.'
 
-RepositoryManager: build $(SRC)RepositoryManager.cpp $(HEAD)RepositoryManager.h $(HEAD)RainbowTable.h $(HEAD)Md5Hash.h
+RepositoryManager: build $(SRC)RepositoryManager.cpp $(HEAD)RepositoryManager.h $(HEAD)RainbowTable.h $(HEAD)md5hash.h
 	@printf 'building RepositoryManager...\t'
 	@$(CC) $(CFLAGS) $(SRC)RepositoryManager.cpp -o $(BUILDDIR)RepositoryManager.o
 	@echo 'complete.'
@@ -49,7 +49,7 @@ input_parser: build $(SRC)input_parser.cpp $(HEAD)md5awsum.h
 	@$(CC) $(CFLAGS) $(SRC)input_parser.cpp -o $(BUILDDIR)input_parser.o
 	@echo 'complete.'
 
-md5awsum: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)RainbowTable.h $(HEAD)Md5Hash.h $(HEAD)RepositoryManager.h
+md5awsum: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)RainbowTable.h $(HEAD)md5hash.h $(HEAD)RepositoryManager.h
 	@printf 'building md5awsum...\t\t'
 	@$(CC) $(CFLAGS) $(SRC)md5awsum.cpp -o $(BUILDDIR)md5awsum.o
 	@echo 'complete.'

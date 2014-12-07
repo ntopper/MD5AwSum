@@ -1,4 +1,4 @@
-#include "headers/Md5Hash.h"
+#include "headers/md5hash.h"
 #include "headers/md5lib.h"
 #include <iostream>
 #include <fstream>
