@@ -10,6 +10,7 @@ all: build md5lib Md5Hash pugixml RainbowTable RepositoryManager inputParser md5
 $(TARGET): $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)inputParser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o
 	@printf 'building executable...\t\t'
 	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)inputParser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o -o $(TARGET)
+	@mv MD5AwSum md5awsum
 	@echo 'complete.'
 	@echo 'Enjoy your program!!'
 
@@ -75,7 +76,7 @@ tempfiles:
 
 install:
 	@printf 'installing MD5AwSum in /usr/bin... '
-	@mv MD5AwSum /usr/bin
+	@mv md5awsum /usr/bin
 	@echo 'complete.'
 
 clean:
