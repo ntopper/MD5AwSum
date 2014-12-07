@@ -190,7 +190,7 @@ void RainbowTable::add_url(string &url, string &key) throw(int) {
 	this->write();
 
 	//remove the temp file and return
-	cout << "cleaning up temporaty files" << endl;
+	cout << "cleaning up temporary files" << endl;
 	system(rm.c_str());
 
 	cout << "added " << url << " to local repository" << endl;	
