@@ -1,5 +1,5 @@
 #include "headers/md5awsum.h"
-#include "inputParser.cpp"
+#include "input_parser.cpp"
 
 int main(int argc, char *argv[]) {
 	md5awsum prog;
