@@ -1,4 +1,4 @@
-#include "headers/RepositoryManager.h"
+#include "headers/repository_manager.h"
 #include "headers/rainbow_table.h"
 #include "headers/md5hash.h"
 #include <iostream>
