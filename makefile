@@ -5,11 +5,11 @@ SRC=src/
 HEAD=src/headers/
 TARGET=MD5AwSum
 
-all: build md5lib Md5Hash pugixml RainbowTable RepositoryManager inputParser md5awsum main $(TARGET)
+all: build md5lib Md5Hash pugixml RainbowTable RepositoryManager input_parser md5awsum main $(TARGET)
 
-$(TARGET): $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)inputParser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o
+$(TARGET): $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)input_parser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o
 	@printf 'building executable...\t\t'
-	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)inputParser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o -o $(TARGET)
+	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)input_parser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o -o $(TARGET)
 	@mv MD5AwSum md5awsum
 	@echo 'complete.'
 	@echo 'Enjoy your program!!'
@@ -44,9 +44,9 @@ RepositoryManager: build $(SRC)RepositoryManager.cpp $(HEAD)RepositoryManager.h 
 	@$(CC) $(CFLAGS) $(SRC)RepositoryManager.cpp -o $(BUILDDIR)RepositoryManager.o
 	@echo 'complete.'
 
-inputParser: build $(SRC)inputParser.cpp $(HEAD)md5awsum.h
-	@printf 'building inputParser...\t\t'
-	@$(CC) $(CFLAGS) $(SRC)inputParser.cpp -o $(BUILDDIR)inputParser.o
+input_parser: build $(SRC)input_parser.cpp $(HEAD)md5awsum.h
+	@printf 'building input_parser...\t\t'
+	@$(CC) $(CFLAGS) $(SRC)input_parser.cpp -o $(BUILDDIR)input_parser.o
 	@echo 'complete.'
 
 md5awsum: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)RainbowTable.h $(HEAD)Md5Hash.h $(HEAD)RepositoryManager.h
@@ -54,7 +54,7 @@ md5awsum: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)RainbowTable.h $(HEA
 	@$(CC) $(CFLAGS) $(SRC)md5awsum.cpp -o $(BUILDDIR)md5awsum.o
 	@echo 'complete.'
 
-main: build $(SRC)main.cpp $(HEAD)md5awsum.h $(SRC)inputParser.cpp
+main: build $(SRC)main.cpp $(HEAD)md5awsum.h $(SRC)input_parser.cpp
 	@printf 'building main...\t\t'
 	@$(CC) $(CFLAGS) $(SRC)main.cpp -o $(BUILDDIR)main.o
 	@echo 'complete.'
