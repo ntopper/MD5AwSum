@@ -3,14 +3,13 @@ CFLAGS=-Wall -std=c++11 -c
 BUILDDIR=build/
 SRC=src/
 HEAD=src/headers/
-TARGET=MD5AwSum
+TARGET=md5awsum
 
-all: build md5lib md5hash pugixml rainbow_table repository_manager input_parser md5awsum main $(TARGET)
+all: build md5lib md5hash pugixml rainbow_table repository_manager input_parser md5awsumsrc main $(TARGET)
 
 $(TARGET): $(BUILDDIR)md5lib.o $(BUILDDIR)md5hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)rainbow_table.o $(BUILDDIR)repository_manager.o $(BUILDDIR)input_parser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o
 	@printf 'building executable...\t\t'
 	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)md5hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)rainbow_table.o $(BUILDDIR)repository_manager.o $(BUILDDIR)input_parser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o -o $(TARGET)
-	@mv MD5AwSum md5awsum
 	@echo 'complete.'
 	@echo 'Enjoy your program!!'
 
@@ -49,7 +48,7 @@ input_parser: build $(SRC)input_parser.cpp $(HEAD)md5awsum.h
 	@$(CC) $(CFLAGS) $(SRC)input_parser.cpp -o $(BUILDDIR)input_parser.o
 	@echo 'complete.'
 
-md5awsum: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)rainbow_table.h $(HEAD)md5hash.h $(HEAD)repository_manager.h
+md5awsumsrc: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)rainbow_table.h $(HEAD)md5hash.h $(HEAD)repository_manager.h
 	@printf 'building md5awsum...\t\t'
 	@$(CC) $(CFLAGS) $(SRC)md5awsum.cpp -o $(BUILDDIR)md5awsum.o
 	@echo 'complete.'
@@ -75,8 +74,8 @@ tempfiles:
 	@echo 'complete.'
 
 install:
-	@printf 'installing MD5AwSum in /usr/bin... '
-	@mv md5awsum /usr/bin
+	@printf 'installing md5awsum in /usr/bin... '
+	@mv $(TARGET) /usr/bin
 	@echo 'complete.'
 
 clean:
@@ -86,6 +85,7 @@ clean:
 	@printf 'deleting build directory...\t'
 	@rm -r $(BUILDDIR)
 	@echo 'complete.'
-	@printf 'deleting executable...\t\t'
-	@rm $(TARGET)
+	@printf 'deleting local hash table...\t'
+	@rm -r ~/.md5awsum/
 	@echo 'complete.'
+	@echo 'Clean complete -> please delete md5awsum from the location it is stored in.'
