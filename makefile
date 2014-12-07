@@ -45,7 +45,7 @@ repository_manager: build $(SRC)repository_manager.cpp $(HEAD)repository_manager
 	@echo 'complete.'
 
 input_parser: build $(SRC)input_parser.cpp $(HEAD)md5awsum.h
-	@printf 'building input_parser...\t\t'
+	@printf 'building input_parser...\t'
 	@$(CC) $(CFLAGS) $(SRC)input_parser.cpp -o $(BUILDDIR)input_parser.o
 	@echo 'complete.'
 
