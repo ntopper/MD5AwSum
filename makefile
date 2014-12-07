@@ -5,11 +5,11 @@ SRC=src/
 HEAD=src/headers/
 TARGET=MD5AwSum
 
-all: build md5lib md5hash pugixml RainbowTable RepositoryManager input_parser md5awsum main $(TARGET)
+all: build md5lib md5hash pugixml rainbow_table RepositoryManager input_parser md5awsum main $(TARGET)
 
-$(TARGET): $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)input_parser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o
+$(TARGET): $(BUILDDIR)md5lib.o $(BUILDDIR)md5hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)rainbow_table.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)input_parser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o
 	@printf 'building executable...\t\t'
-	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)Md5Hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)RainbowTable.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)input_parser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o -o $(TARGET)
+	@$(CC) $(BUILDDIR)md5lib.o $(BUILDDIR)md5hash.o $(BUILDDIR)pugixml.o $(BUILDDIR)rainbow_table.o $(BUILDDIR)RepositoryManager.o $(BUILDDIR)input_parser.o $(BUILDDIR)md5awsum.o $(BUILDDIR)main.o -o $(TARGET)
 	@mv MD5AwSum md5awsum
 	@echo 'complete.'
 	@echo 'Enjoy your program!!'
@@ -34,12 +34,12 @@ pugixml: build $(SRC)pugixml.cpp $(HEAD)pugixml.hpp
 	@$(CC) $(CFLAGS) $(SRC)pugixml.cpp -o $(BUILDDIR)pugixml.o
 	@echo 'complete.'
 
-RainbowTable: build $(SRC)RainbowTable.cpp $(HEAD)RainbowTable.h $(HEAD)pugixml.hpp
-	@printf 'building RainbowTable...\t'
-	@$(CC) $(CFLAGS) $(SRC)RainbowTable.cpp -o $(BUILDDIR)RainbowTable.o
+rainbow_table: build $(SRC)rainbow_table.cpp $(HEAD)rainbow_table.h $(HEAD)pugixml.hpp
+	@printf 'building rainbow_table...\t'
+	@$(CC) $(CFLAGS) $(SRC)rainbow_table.cpp -o $(BUILDDIR)rainbow_table.o
 	@echo 'complete.'
 
-RepositoryManager: build $(SRC)RepositoryManager.cpp $(HEAD)RepositoryManager.h $(HEAD)RainbowTable.h $(HEAD)md5hash.h
+RepositoryManager: build $(SRC)RepositoryManager.cpp $(HEAD)RepositoryManager.h $(HEAD)rainbow_table.h $(HEAD)md5hash.h
 	@printf 'building RepositoryManager...\t'
 	@$(CC) $(CFLAGS) $(SRC)RepositoryManager.cpp -o $(BUILDDIR)RepositoryManager.o
 	@echo 'complete.'
@@ -49,7 +49,7 @@ input_parser: build $(SRC)input_parser.cpp $(HEAD)md5awsum.h
 	@$(CC) $(CFLAGS) $(SRC)input_parser.cpp -o $(BUILDDIR)input_parser.o
 	@echo 'complete.'
 
-md5awsum: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)RainbowTable.h $(HEAD)md5hash.h $(HEAD)RepositoryManager.h
+md5awsum: build $(SRC)md5awsum.cpp $(HEAD)md5awsum.h $(HEAD)rainbow_table.h $(HEAD)md5hash.h $(HEAD)RepositoryManager.h
 	@printf 'building md5awsum...\t\t'
 	@$(CC) $(CFLAGS) $(SRC)md5awsum.cpp -o $(BUILDDIR)md5awsum.o
 	@echo 'complete.'

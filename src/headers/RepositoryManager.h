@@ -2,7 +2,7 @@
 #define MD5LIB_H
 
 #include <string>
-#include "RainbowTable.h"
+#include "rainbow_table.h"
 
 using namespace std;
 
@@ -19,5 +19,4 @@ class RepositoryManager {
 	private:
 		
 };
-
 #endif

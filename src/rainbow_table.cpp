@@ -1,4 +1,4 @@
-#include "headers/RainbowTable.h"
+#include "headers/rainbow_table.h"
 #include <iostream>
 #include <string>
 #include <unistd.h>
