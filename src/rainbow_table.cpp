@@ -201,16 +201,6 @@ void RainbowTable::add_entry(string name, string hash, string key) {
     //select table
     pugi::xml_node root = this->tree.child("RainbowTable");
 
-    //check if local repo exists
-    if(!this->find_repo("local")) {
-        //add local entry if not
-        pugi::xml_node local = root.append_child();
-        local.set_name("entry");
-        local.append_attribute("key") = key.c_str(); //f5ddaf0ca7929578b408c909429f68f2
-        local.append_attribute("name") = "local";
-        local.append_attribute("hash") = "repository";
-    }
-
     //append entry
     pugi::xml_node entry = root.append_child();
     entry.set_name("entry");
